@@ -1,21 +1,25 @@
-var builder = WebApplication.CreateBuilder(args);
+using Identity.Center.Persistence.Extensions;
+
+WebApplicationBuilder builder = WebApplication
+  .CreateBuilder(args)
+  .WithIdentityPersistence();
 
 // Add services to the container.
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
+string[] summaries =
+[
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+];
 
 app.MapGet("/weatherforecast", () =>
 {
-  var forecast = Enumerable.Range(1, 5).Select(index =>
+  IEnumerable<WeatherForecast> forecast = Enumerable.Range(1, 5).Select(index =>
       new WeatherForecast
       (
           DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
