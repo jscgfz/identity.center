@@ -14,7 +14,7 @@ public static class DependencyInjection
   {
     builder
       .Services
-      .AddDbContext<IdentityContext>((provider, options) =>
+      .AddPooledDbContextFactory<IdentityContext>((provider, options) =>
       {
         options.UseSqlServer(
           provider.GetRequiredService<IConfiguration>().GetConnectionString(nameof(IdentityContext)),
@@ -28,6 +28,13 @@ public static class DependencyInjection
         options.EnableDetailedErrors();
         options.EnableSensitiveDataLogging();
       });
+
+    builder
+      .Services
+      .AddScoped(
+        sp => sp.GetRequiredService<IDbContextFactory<IdentityContext>>().CreateDbContext()
+      );
+
     return builder;
   }
 }
