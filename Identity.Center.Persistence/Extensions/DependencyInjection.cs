@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Identity.Center.Persistence.Extensions;
 
@@ -34,12 +35,11 @@ public static class DependencyInjection
 
     builder
       .Services
-      .AddScoped(
-        sp => sp.GetRequiredService<IDbContextFactory<IdentityContext>>().CreateDbContext()
-      );
-
-    // agregar un pipeline 
-
+      .AddScoped(sp => sp.GetRequiredService<IDbContextFactory<IdentityContext>>().CreateDbContext());
+    builder
+      .Services
+      .AddScoped<DbContext>(sp => sp.GetRequiredService<IdentityContext>());
+    
     return builder;
   }
 }
