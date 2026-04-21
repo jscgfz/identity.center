@@ -1,8 +1,13 @@
+using Identity.Center.Application.Extensions;
+using Identity.Center.Infrastructure.Extensions;
 using Identity.Center.Persistence.Extensions;
 
 WebApplicationBuilder builder = WebApplication
   .CreateBuilder(args)
-  .WithIdentityPersistence();
+  .WithIdentityPersistence()
+  .WithAuth()
+  .WithCache()
+  .WithResultExtensions();
 
 // Add services to the container.
 
@@ -10,7 +15,7 @@ WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 string[] summaries =
 [
