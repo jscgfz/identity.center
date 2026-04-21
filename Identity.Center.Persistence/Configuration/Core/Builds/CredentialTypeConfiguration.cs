@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using Identity.Center.Application.Common.Authentication.Models;
-using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Builds;
 using Identity.Center.Domain.Enums;

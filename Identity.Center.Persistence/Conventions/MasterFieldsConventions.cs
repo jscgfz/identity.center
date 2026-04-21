@@ -10,7 +10,7 @@ internal sealed class MasterFieldsConventions : IModelFinalizingConvention
 {
   public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
   {
-    foreach(IConventionEntityType entityType in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited))
+    foreach (IConventionEntityType entityType in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited))
     {
       IConventionProperty name = entityType.FindProperty(nameof(IMasterFields.Name)) ?? throw new NullReferenceException();
       name.SetColumnName(nameof(name));

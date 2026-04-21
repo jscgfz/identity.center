@@ -1,5 +1,4 @@
-﻿using Identity.Center.Domain.Entities.Core.Identity;
-using Identity.Center.Domain.Primitives.Abstractions;
+﻿using Identity.Center.Domain.Primitives.Abstractions;
 using Identity.Center.Persistence.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -12,7 +11,7 @@ internal sealed class CreatedEntityFieldsConvention : IModelFinalizingConvention
 {
   public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
   {
-    foreach(IConventionEntityType entityType in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited))
+    foreach (IConventionEntityType entityType in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited))
     {
       IConventionProperty createdAt = entityType.FindProperty(nameof(ICreatedEntityFields<Guid>.CreatedAtUtc)) ?? throw new NullReferenceException();
       createdAt.SetColumnName("created_at_utc");

@@ -10,7 +10,7 @@ internal sealed class LastModifiedEntityFieldsConvention : IModelFinalizingConve
 {
   public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
   {
-    foreach(IConventionEntityType entityType in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited))
+    foreach (IConventionEntityType entityType in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited))
     {
       IConventionProperty lastModifiedAt = entityType.FindProperty(nameof(ILastModifiedEntityFields<Guid>.LastModifiedAtUtc)) ?? throw new NullReferenceException();
       lastModifiedAt.SetColumnName("last_modified_at_utc");

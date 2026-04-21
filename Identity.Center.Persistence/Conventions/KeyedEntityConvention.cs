@@ -11,7 +11,7 @@ internal sealed class KeyedEntityConvention : IModelFinalizingConvention
 {
   public void ProcessModelFinalizing(IConventionModelBuilder modelBuilder, IConventionContext<IConventionModelBuilder> context)
   {
-    foreach(IConventionProperty conventionProperty in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited).Select(GetId))
+    foreach (IConventionProperty conventionProperty in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited).Select(GetId))
     {
       conventionProperty.SetColumnName("id");
       _ = conventionProperty.ClrType switch

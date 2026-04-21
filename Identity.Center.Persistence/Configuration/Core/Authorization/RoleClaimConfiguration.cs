@@ -18,7 +18,7 @@ internal sealed class RoleClaimConfiguration : IEntityTypeConfiguration<RoleClai
       .Property(row => row.ClaimId)
       .HasColumnName("claim_id");
     builder
-      .HasKey(row => new { row.RoleId,  row.ClaimId });
+      .HasKey(row => new { row.RoleId, row.ClaimId });
     builder
       .HasOne(row => row.Role)
       .WithMany(row => row.Claims)
