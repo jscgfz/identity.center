@@ -9,7 +9,7 @@ public class ApiKey : MasterEntity<Guid>
   public required Guid AppId { get; set; }
   public required byte[] Hash { get; set; }
   public required byte[] Salt { get; set; }
-  public bool Root {  get; set; }
+  public bool Root { get; set; }
 
   public virtual App App { get; set; } = default!;
   public virtual ICollection<ApiKeyClaim> Claims { get; set; } = [];

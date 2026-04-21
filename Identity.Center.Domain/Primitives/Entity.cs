@@ -17,5 +17,5 @@ public abstract class Entity<TKey, TUser> : AggregateRoot, IKeyedEntity<TKey>, I
 }
 
 public abstract class Entity<TKey> : Entity<TKey, Guid>
-  where TKey: struct, IEquatable<TKey>
+  where TKey : struct, IEquatable<TKey>
 { }
