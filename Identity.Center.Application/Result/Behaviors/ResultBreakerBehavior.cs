@@ -17,18 +17,19 @@ internal sealed class ResultBreakerBehavior<TRequest, TResponse>(IServiceProvide
   public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
   {
     Type responseType = typeof(TResponse);
+    Type requestType = typeof(TRequest);
     if (!responseType.IsGenericType || responseType.GetGenericTypeDefinition() != typeof(Result<>))
       return await next(cancellationToken);
 
     if (
-      responseType.GetInterfaces().FirstOrDefault(
+      requestType.GetInterfaces().FirstOrDefault(
         type => type.IsGenericType && new[] { typeof(ICommand<>), typeof(IQuery<>) }.Any(t => t == type.GetGenericTypeDefinition())
       ) is not Type resultRequestType
     )
       return await next(cancellationToken);
 
     IEnumerable<DbContext> contexts = _provider.GetServices<DbContext>();
-    IEnumerable<IDbContextTransaction> transactions = resultRequestType == typeof(ICommand<>)
+    IEnumerable<IDbContextTransaction> transactions = resultRequestType.GetGenericTypeDefinition() == typeof(ICommand<>)
       ? await Task.WhenAll(contexts.Select(async c => c.Database.CurrentTransaction ?? await c.Database.BeginTransactionAsync(cancellationToken)))
       : [];
     IEnumerable<IValidator<TRequest>> validators = _provider.GetServices<IValidator<TRequest>>();
@@ -49,7 +50,7 @@ internal sealed class ResultBreakerBehavior<TRequest, TResponse>(IServiceProvide
           return (TResponse)Activator.CreateInstance(responseType, null, HttpStatusCode.BadRequest, errors)!;
       }
 
-      if (resultRequestType == typeof(IQuery<>))
+      if (resultRequestType.GetGenericTypeDefinition() == typeof(IQuery<>))
         foreach (DbContext context in contexts)
           context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
