@@ -2,6 +2,7 @@
 using Identity.Center.Application.Abstractions.Result;
 using Identity.Center.Application.Common;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 
 namespace Identity.Center.Application.Result;
 
@@ -37,7 +38,7 @@ public readonly struct Result<T>
     : this(value, ((int)statusCode), errors) { }
 
   public static implicit operator Result<T>(T value)
-    => value is null
+    => value is not null
     ? new(value, HttpStatusCode.OK, [])
     : new(value, HttpStatusCode.NotFound, [IdentityErrors.NotFound]);
 }
@@ -94,4 +95,17 @@ public static class Result
 
     return new(await asyncFactory.Invoke(result1.Value, result2.Value), result1.Code, []);
   }
+
+  public static IResult AsHttpResult<TIn>(this Result<TIn> result)
+  {
+    if (result.Success)
+      return typeof(TIn) == typeof(Unit) ? Results.NoContent() : Results.Ok(result.Value);
+    return Results.Json(
+      data: null,
+      statusCode: result.Code
+    );
+  }
+
+  public static async Task<IResult> AsHttpResult<TIn>(this Task<Result<TIn>> result)
+    => AsHttpResult(await result);
 }
