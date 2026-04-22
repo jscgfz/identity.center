@@ -25,7 +25,7 @@ public readonly struct Result<T>
     _statusCode = statusCode;
     _success = _statusCode >= 100 && _statusCode <= 399;
     if (_success) ArgumentNullException.ThrowIfNull(value, nameof(value));
-    else if(!errors.Any()) throw new ArgumentException($"${nameof(errors)} required", nameof(errors));
+    else if (!errors.Any()) throw new ArgumentException($"${nameof(errors)} required", nameof(errors));
     _value = value;
     _errors = errors;
   }

@@ -121,7 +121,7 @@ public static class DependencyInjection
 
   public static WebApplication WithOpenApiDocumentation(this WebApplication app)
   {
-    app.MapOpenApi("/openapi/{documentName}/openapidoc.json"); 
+    app.MapOpenApi("/openapi/{documentName}/openapidoc.json");
     return app;
   }
 

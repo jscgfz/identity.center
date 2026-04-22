@@ -1,11 +1,8 @@
-using Asp.Versioning.ApiExplorer;
 using Asp.Versioning.Builder;
 using Identity.Center.Api.Extensions;
 using Identity.Center.Application.Extensions;
-using Identity.Center.Infrastructure.Configuration.Authentication;
 using Identity.Center.Infrastructure.Extensions;
 using Identity.Center.Persistence.Extensions;
-using Microsoft.AspNetCore.Authorization;
 
 WebApplication app = WebApplication
   .CreateBuilder(args)

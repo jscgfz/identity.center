@@ -9,4 +9,4 @@ public record BaseError(
 {
   public KeyValuePair<string, string> Seralize()
     => KeyValuePair.Create(Name, Description);
-} 
+}

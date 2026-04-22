@@ -17,10 +17,10 @@ internal sealed class ResultBreakerBehavior<TRequest, TResponse>(IServiceProvide
   public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
   {
     Type responseType = typeof(TResponse);
-    if(!responseType.IsGenericType || responseType.GetGenericTypeDefinition() != typeof(Result<>))
+    if (!responseType.IsGenericType || responseType.GetGenericTypeDefinition() != typeof(Result<>))
       return await next(cancellationToken);
 
-    if(
+    if (
       responseType.GetInterfaces().FirstOrDefault(
         type => type.IsGenericType && new[] { typeof(ICommand<>), typeof(IQuery<>) }.Any(t => t == type.GetGenericTypeDefinition())
       ) is not Type resultRequestType
@@ -49,8 +49,8 @@ internal sealed class ResultBreakerBehavior<TRequest, TResponse>(IServiceProvide
           return (TResponse)Activator.CreateInstance(responseType, null, HttpStatusCode.BadRequest, errors)!;
       }
 
-      if(resultRequestType == typeof(IQuery<>))
-        foreach(DbContext context in contexts)
+      if (resultRequestType == typeof(IQuery<>))
+        foreach (DbContext context in contexts)
           context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
       TResponse response = await next(cancellationToken);
