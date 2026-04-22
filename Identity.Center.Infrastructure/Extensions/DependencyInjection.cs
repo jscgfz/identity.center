@@ -41,6 +41,10 @@ public static class DependencyInjection
         ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>()
       ]);
 
+    builder
+      .Services
+      .AddAuthorization();
+
     return builder;
   }
 
