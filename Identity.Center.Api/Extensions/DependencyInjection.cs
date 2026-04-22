@@ -1,4 +1,7 @@
-﻿using Asp.Versioning;
+﻿using System.Reflection;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
+using Identity.Center.Api.Configuration;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.OpenApi;
@@ -106,6 +109,45 @@ public static class DependencyInjection
         options.GroupNameFormat = "'v'VVV"; // Esto genera "v1", "v2", etc.
         options.SubstituteApiVersionInUrl = true;
       });
+    return builder;
+  }
+
+  public static WebApplication WithAuth(this WebApplication app)
+  {
+    app.UseAuthentication();
+    app.UseAuthorization();
+    return app;
+  }
+
+  public static WebApplication WithOpenApiDocumentation(this WebApplication app)
+  {
+    app.MapOpenApi("/openapi/{documentName}/openapidoc.json"); 
+    return app;
+  }
+
+  public static IEndpointRouteBuilder RegistryRoutes(this IEndpointRouteBuilder builder)
+  {
+    return builder;
+  }
+
+  public static WebApplication WithSwagger(this WebApplication app)
+  {
+    app.UseSwaggerUI(options =>
+    {
+      IEnumerable<ApiVersionDescription> versions = app.DescribeApiVersions();
+      foreach (ApiVersionDescription version in versions)
+        options.SwaggerEndpoint($"/openapi/{version.GroupName}/openapidoc.json", version.GroupName);
+    });
+    return app;
+  }
+
+  private static IEndpointRouteBuilder RegistryRoutesOfType<TType>(this IEndpointRouteBuilder builder)
+    where TType : IRouterModule
+  {
+    Assembly assembly = Assembly.GetExecutingAssembly();
+    foreach (Type routerType in assembly.GetTypes().Where(t => t is { IsInterface: false, IsAbstract: false } && t.GetInterfaces().Contains(typeof(TType))))
+      ((TType)Activator.CreateInstance(routerType)!).Registry(builder);
+
     return builder;
   }
 }
