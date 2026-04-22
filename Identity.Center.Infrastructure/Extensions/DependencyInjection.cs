@@ -1,7 +1,9 @@
 ﻿using Identity.Center.Application.Abstractions.Managers;
+using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Identity.Center.Infrastructure.Configuration.Authorization;
 using Identity.Center.Infrastructure.Managers;
+using Identity.Center.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -38,7 +40,8 @@ public static class DependencyInjection
       .Services
       .TryAddEnumerable([
         ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTrsformation>(),
-        ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>()
+        ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>(),
+        ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>))
       ]);
 
     builder
