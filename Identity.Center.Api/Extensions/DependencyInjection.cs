@@ -126,9 +126,8 @@ public static class DependencyInjection
   }
 
   public static IEndpointRouteBuilder RegistryRoutes(this IEndpointRouteBuilder builder)
-  {
-    return builder;
-  }
+    => builder
+      .RegistryRoutesOfType<IIdentityModule>();
 
   public static WebApplication WithSwagger(this WebApplication app)
   {
@@ -141,7 +140,7 @@ public static class DependencyInjection
     return app;
   }
 
-  private static IEndpointRouteBuilder RegistryRoutesOfType<TType>(this IEndpointRouteBuilder builder)
+  public static IEndpointRouteBuilder RegistryRoutesOfType<TType>(this IEndpointRouteBuilder builder)
     where TType : IRouterModule
   {
     Assembly assembly = Assembly.GetExecutingAssembly();
