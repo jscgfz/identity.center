@@ -26,18 +26,24 @@ public sealed class ApiKeySchemeHandler(
     CancellationToken cancellationToken = Request.HttpContext.RequestAborted;
 
     if (
-      !Request.Headers.TryGetValue(Options.HeaderName, out StringValues header) ||
-      header.FirstOrDefault() is not string apikeyValue ||
-      !apikeyValue.Contains(':')
+      !Request.Headers.TryGetValue(ApiKeySchemeOptions.HeaderName, out StringValues header) ||
+      header.FirstOrDefault() is not string apiKey
     )
       return AuthenticateResult.Fail(
         new NullReferenceException(
-          $"{Options.HeaderName} Header not Found"
+          $"{ApiKeySchemeOptions.HeaderName} Header not Found"
         )
       );
 
-    string subject = apikeyValue[..apikeyValue.LastIndexOf(':')];
-    string apiKey = apikeyValue[(apikeyValue.LastIndexOf(':') + 1)..];
+    if (
+      !Request.Headers.TryGetValue(ApiKeySchemeOptions.SubjectHeaderName, out StringValues subjectHeader) ||
+      subjectHeader.FirstOrDefault() is not string subject
+    )
+      return AuthenticateResult.Fail(
+        new NullReferenceException(
+          $"{ApiKeySchemeOptions.SubjectHeaderName} Header not Found"
+        )
+      );
 
     if (
       !Guid.TryParse(subject, out Guid subjectId) ||
