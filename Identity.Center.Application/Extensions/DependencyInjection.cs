@@ -12,6 +12,11 @@ public static class DependencyInjection
   public static WebApplicationBuilder WithResultExtensions(this WebApplicationBuilder builder)
   {
     Assembly assembly = Assembly.GetExecutingAssembly();
+    foreach (Type type in assembly.GetTypes().Where(type => type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>))))
+      builder.Services.AddTransient(
+        type.GetInterfaces().First(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IValidator<>)),
+        type
+      );
     builder
       .Services
       .AddMediatR(options =>
@@ -19,9 +24,6 @@ public static class DependencyInjection
         options.RegisterServicesFromAssembly(assembly);
         options.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ResultBreakerBehavior<,>));
       });
-    builder
-      .Services
-      .AddValidatorsFromAssembly(assembly);
     return builder;
   }
 }
