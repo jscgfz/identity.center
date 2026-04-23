@@ -13,13 +13,16 @@ public sealed class AppsV1Module : IIdentityModule
   {
     RouteGroupBuilder group = builder
       .MapGroup("/apps")
-      .WithTags("Aplicaciones");
+      .WithTags("Aplicaciones")
+      .WithDescription("Gestión de aplicaciones");
 
     group.MapGet(
       string.Empty,
       async ([AsParameters] GetAppsQuery query, ISender sender) =>
         await sender.Send(query).AsHttpResult()
-    );
+    )
+      .WithDescription("Obtiene la paginación de las aplicaciones")
+      .Produces<IPaginatedResult<AppDto>>();
 
     group.MapGet(
       "/{appId}",
