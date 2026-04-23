@@ -42,7 +42,7 @@ public static class DependencyInjection
         ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTrsformation>(),
         ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>(),
         ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>)),
-        ServiceDescriptor.Scoped(typeof(IdentityUnitOfWork), typeof(IIdentityUnitOfWork))
+        ServiceDescriptor.Scoped<IIdentityUnitOfWork, IdentityUnitOfWork>()
       ]);
 
     builder
