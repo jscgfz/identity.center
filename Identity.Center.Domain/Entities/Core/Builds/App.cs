@@ -7,7 +7,7 @@ namespace Identity.Center.Domain.Entities.Core.Builds;
 
 public class App : MasterEntity<Guid>
 {
-  public required long Index { get; set; }
+  public long Index { get; set; }
   public required string Prefix { get; set; }
   public string? DomainName { get; set; }
 
