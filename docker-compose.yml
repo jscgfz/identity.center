@@ -8,6 +8,4 @@ services:
   identity.center.redis:
     image: redis:7.2-alpine
     container_name: identity.center.redis
-    restart: always
-    expose:
-      - 6379
+    restart: unless-stopped

@@ -6,8 +6,10 @@ services:
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}
       - ConnectionStrings:IRedis=identity.center.redis:6379,password=${REDIS_PASSWORD},abortConnect=false,connectTimeout=5000,syncTimeout=5000
     ports:
-      - "8080"
+      - "56676:8080"
   identity.center.redis:
+    expose:
+      - 6379
     command: >
       redis-server
       --requirepass "${REDIS_PASSWORD}"
