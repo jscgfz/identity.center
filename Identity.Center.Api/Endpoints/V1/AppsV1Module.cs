@@ -1,5 +1,6 @@
 ﻿using Identity.Center.Api.Configuration;
 using Identity.Center.Application.Abstractions.Common;
+using Identity.Center.Application.Features.Apps.Commands.AddApp;
 using Identity.Center.Application.Features.Apps.Dtos;
 using Identity.Center.Application.Features.Apps.Queries.GetApp;
 using Identity.Center.Application.Features.Apps.Queries.GetAppAuth;
@@ -26,6 +27,13 @@ public sealed class AppsV1Module : IIdentityModule
     )
       .WithDescription("Obtiene la paginación de las aplicaciones")
       .Produces<IPaginatedResult<AppDto>>();
+
+    group.MapPost(
+      string.Empty,
+      async (AddAppCommand command, ISender sender) => await sender.Send(command).AsHttpResult()
+    )
+      .WithDescription("Crea una aplicación")
+      .Produces<CreatedAppDto>();
 
     group.MapGet(
       "/{appId}",
