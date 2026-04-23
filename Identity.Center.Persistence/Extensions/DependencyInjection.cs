@@ -22,7 +22,6 @@ public static class DependencyInjection
           {
             sql.MigrationsHistoryTable("migrations", IdentitySchemas.Builds);
             sql.MigrationsAssembly(Assembly.GetExecutingAssembly());
-            sql.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(5), errorNumbersToAdd: null);
             sql.CommandTimeout(30);
             sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
           }
