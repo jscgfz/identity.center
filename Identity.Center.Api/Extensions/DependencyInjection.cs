@@ -1,9 +1,11 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics;
+using System.Reflection;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Identity.Center.Api.Configuration;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 
@@ -41,13 +43,13 @@ public static class DependencyInjection
           }
         },
         {
-          $"{ApiKeySchemeOptions.DefaultScheme}Subject",
+          $"{ApiKeySchemeOptions.DefaultScheme} Subject".ToLower(),
           new()
           {
             In = ParameterLocation.Header,
             Type = SecuritySchemeType.ApiKey,
             Name = ApiKeySchemeOptions.SubjectHeaderName,
-            Scheme = $"{ApiKeySchemeOptions.DefaultScheme}Subject",
+            Scheme = $"{ApiKeySchemeOptions.DefaultScheme} Subject".ToLower(),
             Description = "Identificador del sujeto"
           }
         },
@@ -71,7 +73,7 @@ public static class DependencyInjection
 
       doc.SecurityRequirements.Add(new()
       {
-        { new() { Reference = new() { Id = $"{ApiKeySchemeOptions.DefaultScheme}Subject", Type = ReferenceType.SecurityScheme } }, [] },
+        { new() { Reference = new() { Id = $"{ApiKeySchemeOptions.DefaultScheme} Subject".ToLower(), Type = ReferenceType.SecurityScheme } }, [] },
         { new() { Reference = new() { Id = ApiKeySchemeOptions.DefaultScheme, Type = ReferenceType.SecurityScheme } }, [] }
       });
 
@@ -146,6 +148,36 @@ public static class DependencyInjection
     Assembly assembly = Assembly.GetExecutingAssembly();
     foreach (Type routerType in assembly.GetTypes().Where(t => t is { IsInterface: false, IsAbstract: false } && t.GetInterfaces().Contains(typeof(TType))))
       ((TType)Activator.CreateInstance(routerType)!).Registry(builder);
+
+    return builder;
+  }
+
+  public static WebApplicationBuilder WithProblemDetails(this WebApplicationBuilder builder)
+  {
+    builder
+      .Services
+      .AddProblemDetails(options =>
+      {
+        options.CustomizeProblemDetails = context =>
+        {
+          context.ProblemDetails.Instance = context.HttpContext.Request.Path;
+          context.ProblemDetails.Extensions.TryAdd("method", context.HttpContext.Request.Method);
+          context.ProblemDetails.Extensions.TryAdd("host", $"{context.HttpContext.Request.Scheme}://{context.HttpContext.Request.Host}");
+          context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
+          Activity? activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
+          context.ProblemDetails.Extensions.TryAdd("requestId", activity?.Id);
+          if (context.Exception is Exception ex)
+          {
+            context.ProblemDetails.Detail = ex.Message;
+            context.ProblemDetails.Type = ex.HelpLink;
+            context.ProblemDetails.Extensions.TryAdd("source", ex.Source);
+            context.ProblemDetails.Extensions.TryAdd("stackTrace", ex.StackTrace);
+          }
+          context.ProblemDetails.Extensions = context.ProblemDetails.Extensions
+            .Reverse()
+            .ToDictionary();
+        };
+      });
 
     return builder;
   }
