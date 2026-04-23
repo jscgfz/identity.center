@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Identity.Center.Application.Abstractions.Reponses;
 using Identity.Center.Application.Abstractions.Result;
 using Identity.Center.Application.Common;
 using MediatR;
@@ -99,10 +100,26 @@ public static class Result
   public static IResult AsHttpResult<TIn>(this Result<TIn> result)
   {
     if (result.Success)
-      return typeof(TIn) == typeof(Unit) ? Results.NoContent() : Results.Ok(result.Value);
-    return Results.Json(
-      data: null,
-      statusCode: result.Code
+      return result.Value switch
+      {
+        ICreatedResponse created => Results.Created(default(string), created),
+        Unit unit => Results.NoContent(),
+        _ => Results.Ok(result.Value)
+      };
+
+    return Results.Problem(
+      $"StatusCode - {result.Code} - " + Enum.GetName((HttpStatusCode)result.Code) ?? "Unrecognized",
+      null,
+      result.Code,
+      Enum.GetName((HttpStatusCode)result.Code) ?? "Unrecognized",
+      null,
+      new Dictionary<string, object?>()
+      {
+        ["errors"] = result.Errors
+          .Select(e => e.Seralize())
+          .GroupBy(e => e.Key)
+          .ToDictionary(e => e.Key, e => e.Select(i => i.Value))
+      }
     );
   }
 
