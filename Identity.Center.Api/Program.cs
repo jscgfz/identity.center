@@ -11,10 +11,11 @@ WebApplication app = WebApplication
   .WithCache()
   .WithVersioning()
   .WithOpenApiDocumentation("v1")
+  .WithProblemDetails()
   .WithResultExtensions()
   .Build()
-  .WithAuth()
-  .WithOpenApiDocumentation();
+  .WithOpenApiDocumentation()
+  .WithAuth();
 
 ApiVersionSet set = app
   .NewApiVersionSet()
