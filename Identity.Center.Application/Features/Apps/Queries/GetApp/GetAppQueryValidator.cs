@@ -12,7 +12,7 @@ internal sealed class GetAppQueryValidator : AbstractValidator<GetAppQuery>
       .Must(row => row != Guid.Empty)
       .WithErrorCode("Invalid")
       .WithMessage("Identificador de la aplicación invalido")
-      .MustAsync((row, cancellationToken) => repo.Data.AnyAsync(row => row.Id == row.Id, cancellationToken))
+      .MustAsync((field, cancellationToken) => repo.Data.AnyAsync(row => field == row.Id, cancellationToken))
       .WithErrorCode("NotFound")
       .OverridePropertyName("App")
       .WithMessage("Aplicación no encontrada");
