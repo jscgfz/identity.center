@@ -23,10 +23,10 @@ ApiVersionSet set = app
   .Build();
 
 app
+  .WithSwagger()
   .MapGroup("/api/v{version:apiVersion}")
   .WithApiVersionSet(set)
   .RegistryRoutes();
 
 app
-  .WithSwagger()
   .Run();
