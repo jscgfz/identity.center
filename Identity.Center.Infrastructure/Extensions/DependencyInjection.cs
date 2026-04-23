@@ -41,7 +41,8 @@ public static class DependencyInjection
       .TryAddEnumerable([
         ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTrsformation>(),
         ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>(),
-        ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>))
+        ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>)),
+        ServiceDescriptor.Scoped(typeof(IdentityUnitOfWork), typeof(IIdentityUnitOfWork))
       ]);
 
     builder
