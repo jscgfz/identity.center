@@ -1,5 +1,7 @@
-﻿using Identity.Center.Application.Abstractions.Repositories;
+﻿using Identity.Center.Application.Abstractions.Common;
+using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Abstractions.Result;
+using Identity.Center.Application.Common;
 using Identity.Center.Application.Features.Apps.Dtos;
 using Identity.Center.Application.Result;
 using Identity.Center.Domain.Entities.Core.Builds;
@@ -8,12 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Center.Application.Features.Apps.Queries.GetApps;
 
-internal sealed class GetAppsQueryHandler(IServiceProvider provider) : IQueryHandler<GetAppsQuery, IEnumerable<AppDto>>
+internal sealed class GetAppsQueryHandler(IServiceProvider provider) : IQueryHandler<GetAppsQuery, IPaginatedResult<AppDto>>
 {
   private readonly IIdentityRepository<App> _repo = provider.GetRequiredService<IIdentityRepository<App>>();
-  public async Task<Result<IEnumerable<AppDto>>> Handle(GetAppsQuery request, CancellationToken cancellationToken)
+  public async Task<Result<IPaginatedResult<AppDto>>> Handle(GetAppsQuery request, CancellationToken cancellationToken)
   {
-    IEnumerable<AppDto> data = await _repo.Data
+    IPaginatedResult<AppDto> data = await PaginatedResult.ComputeAsync(
+      _repo.Data
+      .OrderByDescending(row => row.CreatedAtUtc)
       .Select(row => new AppDto(
         row.Id,
         row.Index,
@@ -21,9 +25,11 @@ internal sealed class GetAppsQueryHandler(IServiceProvider provider) : IQueryHan
         row.Description,
         row.CreatedAtUtc,
         row.Prefix
-      ))
-      .ToListAsync(cancellationToken);
+      )),
+      request,
+      cancellationToken
+    );
 
-    return data.Success();
+    return data.AsResult();
   }
 }
