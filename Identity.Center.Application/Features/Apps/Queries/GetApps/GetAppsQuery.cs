@@ -5,6 +5,9 @@ using Identity.Center.Application.Features.Apps.Dtos;
 namespace Identity.Center.Application.Features.Apps.Queries.GetApps;
 
 public sealed record GetAppsQuery(
+  string? Prefix,
+  string? Name,
+  string? Description,
   int? PageIndex,
   int? PageSize,
   bool? FullSet

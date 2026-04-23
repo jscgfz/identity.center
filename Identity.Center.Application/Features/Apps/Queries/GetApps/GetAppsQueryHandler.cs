@@ -18,6 +18,9 @@ internal sealed class GetAppsQueryHandler(IServiceProvider provider) : IQueryHan
     IPaginatedResult<AppDto> data = await PaginatedResult.ComputeAsync(
       _repo.Data
       .OrderByDescending(row => row.CreatedAtUtc)
+      .Where(row => string.IsNullOrEmpty(request.Prefix) || row.Prefix.Contains(request.Prefix))
+      .Where(row => string.IsNullOrEmpty(request.Name) || row.Name.Contains(request.Name))
+      .Where(row => string.IsNullOrEmpty(request.Description) || (!string.IsNullOrEmpty(row.Description) && row.Description.Contains(request.Description)))
       .Select(row => new AppDto(
         row.Id,
         row.Index,
