@@ -13,6 +13,7 @@ WebApplication app = WebApplication
   .WithOpenApiDocumentation("v1")
   .WithProblemDetails()
   .WithResultExtensions()
+  .WithBroker()
   .Build()
   .WithOpenApiDocumentation()
   .WithAuth();

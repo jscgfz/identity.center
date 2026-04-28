@@ -5,6 +5,11 @@ services:
       - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}
       - ConnectionStrings:IRedis=identity.center.redis:6379,password=${REDIS_PASSWORD},abortConnect=false,connectTimeout=5000,syncTimeout=5000
+      - BrokerOptions:Host=identity.center.broker
+      - BrokerOptions:Username=${RABBITMQ_DEFAULT_USER}
+      - BrokerOptions:Password=${RABBITMQ_DEFAULT_PASS}
+      - BrokerOptions:VirtualHost=/
+      - BrokerOptions:Exchange=comms.exchange
     ports:
       - "56676:8080"
   identity.center.redis:
@@ -24,4 +29,11 @@ services:
       --lazyfree-lazy-eviction yes
       --lazyfree-lazy-expire yes
       --active-defrag-threshold-lower 10
-      --active-defrag-threshold-upper 100  
+      --active-defrag-threshold-upper 100
+  identity.center.broker:
+    expose:
+      - 5672
+      - 15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}

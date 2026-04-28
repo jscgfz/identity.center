@@ -138,6 +138,7 @@ public static class DependencyInjection
       IEnumerable<ApiVersionDescription> versions = app.DescribeApiVersions();
       foreach (ApiVersionDescription version in versions)
         options.SwaggerEndpoint($"/openapi/{version.GroupName}/openapidoc.json", version.GroupName);
+      options.RoutePrefix = "reference";
     });
     return app;
   }

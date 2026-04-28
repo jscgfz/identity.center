@@ -9,3 +9,7 @@ services:
     image: redis:7.2-alpine
     container_name: identity.center.redis
     restart: unless-stopped
+  identity.center.broker:
+    image: rabbitmq:3.13-management
+    container_name: identity.center.broker
+    restart: unless-stopped
