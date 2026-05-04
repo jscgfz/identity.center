@@ -11,7 +11,7 @@ public class Role : Entity<Guid>
   public string? Description { get; set; }
   public string? DomainName { get; set; }
   public bool ActiveDirectoryMandatory { get; set; }
-
+  public bool Root { get; set; }
   public virtual App App { get; set; } = default!;
   public virtual ICollection<UserRole> Users { get; set; } = [];
   public virtual ICollection<RoleClaim> Claims { get; set; } = [];
