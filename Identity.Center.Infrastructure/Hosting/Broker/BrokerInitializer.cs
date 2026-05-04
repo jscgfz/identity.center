@@ -13,7 +13,7 @@ internal sealed class BrokerInitializer(IServiceProvider provider) : IHostedServ
   private readonly IConnection _rabbit = provider.GetRequiredService<IConnection>();
   private readonly IOptionsMonitor<BrokerOptions> _options = provider.GetRequiredService<IOptionsMonitor<BrokerOptions>>();
   private readonly ILogger<BrokerInitializer> _logger = provider.GetRequiredService<ILogger<BrokerInitializer>>();
-  
+
   public async Task StartAsync(CancellationToken cancellationToken)
   {
     _logger.LogInformation("Initializing");
@@ -24,7 +24,7 @@ internal sealed class BrokerInitializer(IServiceProvider provider) : IHostedServ
       durable: true,
       cancellationToken: cancellationToken
     );
-    foreach(ContactTypes contactType in Enum.GetValues<ContactTypes>())
+    foreach (ContactTypes contactType in Enum.GetValues<ContactTypes>())
     {
       await channel.QueueDeclareAsync(BrokerOptions.Queue(contactType), true, false, false, cancellationToken: cancellationToken);
       await channel.QueueBindAsync(BrokerOptions.Queue(contactType), _options.CurrentValue.Exchange, BrokerOptions.Topic(contactType), cancellationToken: cancellationToken);

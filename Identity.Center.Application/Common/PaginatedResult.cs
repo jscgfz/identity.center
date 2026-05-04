@@ -38,7 +38,7 @@ public static class PaginatedResult
       data
     );
   }
-  
+
   public static Result<IPaginatedResult<TData>> AsResult<TData>(this IPaginatedResult<TData> set)
     where TData : class
     => set.Data.Any()

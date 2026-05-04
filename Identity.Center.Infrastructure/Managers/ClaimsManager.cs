@@ -5,7 +5,6 @@ using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Authentication;
 using Identity.Center.Domain.Entities.Core.Authorization;
-using Identity.Center.Domain.Entities.Core.Identity;
 using Identity.Center.Persistence.Data.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,7 +69,7 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
         .Select(x => new Claim(IdentityClaimTypes.Caim, $"{x.Claim.Group.Name}:{x.Claim.Action.Name}"))
         .ToListAsync(cancellationToken);
 
-      if(await _context.Set<Role>().AnyAsync(row => row.Id == roleId, cancellationToken))
+      if (await _context.Set<Role>().AnyAsync(row => row.Id == roleId, cancellationToken))
         claims = claims.Append(new(IdentityClaimTypes.Caim, "root"));
 
       await _redis.HashSetAsync(

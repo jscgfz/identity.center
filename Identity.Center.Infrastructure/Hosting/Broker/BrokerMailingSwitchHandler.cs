@@ -1,14 +1,10 @@
-﻿using System.Threading;
-using Identity.Center.Application.Common.Options;
+﻿using Identity.Center.Application.Common.Options;
 using Identity.Center.Domain.Common;
-using Identity.Center.Domain.Entities.Core.Security;
 using Identity.Center.Domain.Enums;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Polly;
-using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 

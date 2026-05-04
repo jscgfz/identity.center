@@ -1,8 +1,4 @@
-﻿using Identity.Center.Application.Abstractions.Managers;
-using Identity.Center.Application.Abstractions.Repositories;
-using Identity.Center.Persistence.Data.Core;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Identity.Center.Persistence.Data.Core;
 
 namespace Identity.Center.Infrastructure.Repositories;
 

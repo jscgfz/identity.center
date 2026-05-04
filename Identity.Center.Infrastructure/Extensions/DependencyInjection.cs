@@ -8,7 +8,6 @@ using Identity.Center.Infrastructure.Hosting.Broker;
 using Identity.Center.Infrastructure.Managers;
 using Identity.Center.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

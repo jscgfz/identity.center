@@ -1,4 +1,5 @@
-﻿using Identity.Center.Api.Configuration;
+﻿using Identity.Center.Api.Common;
+using Identity.Center.Api.Configuration;
 using Identity.Center.Api.Configuration.Authorization;
 using Identity.Center.Api.Extensions;
 using Identity.Center.Application.Abstractions.Common;
@@ -34,9 +35,9 @@ public sealed class AdminV1Module : IIdentityModule
         .WithTags("Administración apps")
         .WithIdentityAuthorization(
           IdentityPolicyBuilder
-            .Empty
-            //.AllowJtw()
-            .AllowApiKeys()
+            .Merged(
+              BaseIdentityPolicies.ApiKey
+            )
         )
         .WithDescription("administración de las apps del sistema")
     );

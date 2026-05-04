@@ -1,6 +1,4 @@
-﻿using Identity.Center.Application.Result;
-
-namespace Identity.Center.Application.Abstractions.Common;
+﻿namespace Identity.Center.Application.Abstractions.Common;
 
 public interface IPaginatedResult<TData>
   where TData : class

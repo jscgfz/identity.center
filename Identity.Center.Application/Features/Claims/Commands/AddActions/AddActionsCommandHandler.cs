@@ -16,12 +16,12 @@ internal sealed class AddActionsCommandHandler(IServiceProvider provider) : ICom
   public async Task<Result<CreatedClaimPartsDto>> Handle(AddActionsCommand request, CancellationToken cancellationToken)
   {
     IEnumerable<Action> actions = [];
-    foreach(CreateClaimPartDto part in request.Cmd)
+    foreach (CreateClaimPartDto part in request.Cmd)
     {
       Action? currentAction = await _repo.Data
         .FirstOrDefaultAsync(row => row.Name == part.Name, cancellationToken);
 
-      if(currentAction == null)
+      if (currentAction == null)
       {
         currentAction = new()
         {

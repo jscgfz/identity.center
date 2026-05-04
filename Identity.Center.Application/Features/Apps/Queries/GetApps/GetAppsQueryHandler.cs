@@ -5,7 +5,6 @@ using Identity.Center.Application.Common;
 using Identity.Center.Application.Features.Apps.Dtos;
 using Identity.Center.Application.Result;
 using Identity.Center.Domain.Entities.Core.Builds;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Center.Application.Features.Apps.Queries.GetApps;

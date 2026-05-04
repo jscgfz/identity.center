@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using System.Security.Claims;
+﻿using System.Reflection;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Infrastructure.Configuration.Authentication;
@@ -86,7 +84,7 @@ public sealed class IdentityPolicyBuilder
       throw new ArgumentException("Politicas obligatorias", nameof(route));
 
     AuthorizationPolicyBuilder builder = new();
-    foreach(AuthorizationPolicy policy in _policies)
+    foreach (AuthorizationPolicy policy in _policies)
       builder.Combine(policy);
 
     route

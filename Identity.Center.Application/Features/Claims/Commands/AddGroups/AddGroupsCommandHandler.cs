@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Identity.Center.Application.Abstractions.Repositories;
+﻿using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Abstractions.Result;
 using Identity.Center.Application.Features.Claims.Dtos;
 using Identity.Center.Application.Result;

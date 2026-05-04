@@ -1,5 +1,4 @@
-﻿using FluentValidation.Validators;
-using Identity.Center.Application.Abstractions.Repositories;
+﻿using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Abstractions.Result;
 using Identity.Center.Application.Features.ApiKeys.Dtos;
 using Identity.Center.Application.Result;
@@ -44,7 +43,7 @@ internal sealed class AddApiKeyCommandHandler(IServiceProvider provider) : IComm
     await _apikeyRepo.AddAsync(apikey, cancellationToken);
     await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-    foreach(string claim in request.Claims)
+    foreach (string claim in request.Claims)
     {
       ClaimValue? claimValue = await _valuesRepo.Data
         .FirstOrDefaultAsync(row => row.Group.Name + ":" + row.Action.Name == claim, cancellationToken);

@@ -1,7 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Identity.Center.Domain.Common.Models.Cryptography;
 using Identity.Center.Domain.Entities.Core.Authentication;
 

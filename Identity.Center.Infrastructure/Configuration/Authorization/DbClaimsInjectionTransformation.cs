@@ -6,7 +6,6 @@ using Identity.Center.Persistence.Data.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using StackExchange.Redis;
 
 namespace Identity.Center.Infrastructure.Configuration.Authorization;
 

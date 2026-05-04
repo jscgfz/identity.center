@@ -34,11 +34,11 @@ internal sealed class AddAppCommandHandler(IServiceProvider provider) : ICommand
       SignatureKey = IdentityCommons.NewHashKey
     };
 
-    if(request.TwoFactorEnabled.HasValue)
+    if (request.TwoFactorEnabled.HasValue)
       appAuth.TwoFactorEnabled = request.TwoFactorEnabled.Value;
-    if(request.ExpirationTime.HasValue)
+    if (request.ExpirationTime.HasValue)
       appAuth.ExpirationTime = request.ExpirationTime.Value;
-    if(request.RefreshTime.HasValue)
+    if (request.RefreshTime.HasValue)
       appAuth.RefreshTime = request.RefreshTime.Value;
 
     await _authRepo.AddAsync(appAuth, cancellationToken);
