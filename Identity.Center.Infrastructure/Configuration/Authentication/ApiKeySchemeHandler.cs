@@ -78,7 +78,6 @@ public sealed class ApiKeySchemeHandler(
     IEnumerable<Claim> initialClaims = [
       new Claim(ClaimTypes.NameIdentifier, subjectId.ToString("N")),
       new Claim(IdentityClaimTypes.App, dbApikey.AppId.ToString("N")),
-      new Claim(IdentityClaimTypes.Root, dbApikey.Root.ToString())
     ];
 
     ClaimsIdentity identity = new(initialClaims, nameof(ApiKeySchemeHandler));
