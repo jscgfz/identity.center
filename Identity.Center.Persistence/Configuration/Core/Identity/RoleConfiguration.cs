@@ -33,6 +33,10 @@ internal sealed class RoleConfiguration : IEntityTypeConfiguration<Role>
       .HasIndex(row => row.DomainName)
       .IsUnique();
     builder
+      .Property(row => row.Root)
+      .HasColumnName("root")
+      .HasDefaultValue(false);
+    builder
       .HasOne(row => row.App)
       .WithMany(row => row.Roles)
       .HasForeignKey(row => row.AppId)
