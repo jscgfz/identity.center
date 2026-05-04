@@ -3,6 +3,7 @@ using System.Reflection;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Identity.Center.Api.Configuration;
+using Identity.Center.Api.Configuration.Authorization;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -13,6 +14,12 @@ namespace Identity.Center.Api.Extensions;
 
 public static class DependencyInjection
 {
+  public static TBuilder WithIdentityAuthorization<TBuilder>(this TBuilder builder, IdentityPolicyBuilder policyBuilder)
+    where TBuilder : IEndpointConventionBuilder
+  {
+    policyBuilder.Apply(builder);
+    return builder;
+  }
   private static Action<OpenApiOptions> _options => options =>
   {
     options.AddDocumentTransformer((doc, context, cancellationToken) =>
