@@ -19,6 +19,7 @@ internal sealed class GetAppQueryHandler(IServiceProvider provider) : IQueryHand
         row.Id,
         row.Index,
         row.Name,
+        row.DomainName,
         row.Description,
         row.CreatedAtUtc,
         row.Prefix
