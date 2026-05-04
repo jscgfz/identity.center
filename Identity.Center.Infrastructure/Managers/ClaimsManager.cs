@@ -3,11 +3,14 @@ using System.Text.Json;
 using Identity.Center.Application.Abstractions.Managers;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
+using Identity.Center.Domain.Entities.Core.Authentication;
 using Identity.Center.Domain.Entities.Core.Authorization;
+using Identity.Center.Domain.Entities.Core.Identity;
 using Identity.Center.Persistence.Data.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using StackExchange.Redis;
+using Role = Identity.Center.Domain.Entities.Core.Identity.Role;
 
 namespace Identity.Center.Infrastructure.Managers;
 
@@ -26,8 +29,11 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
         .Include(x => x.Claim.Group)
         .Include(x => x.Claim.Action)
         .Where(x => x.ApiKeyId == apiKey)
-        .Select(x => new Claim(IdentityClaimTypes.Caim, $"{x.Claim.Group.Name}:${x.Claim.Action.Name}"))
+        .Select(x => new Claim(IdentityClaimTypes.Caim, $"{x.Claim.Group.Name}:{x.Claim.Action.Name}"))
         .ToListAsync(cancellationToken);
+
+      if (await _context.Set<ApiKey>().AnyAsync(row => row.Id == apiKey && row.Root, cancellationToken))
+        claims = claims.Append(new(IdentityClaimTypes.Caim, "root"));
 
       await _redis.HashSetAsync(
         apiKeyKey,
@@ -61,8 +67,11 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
         .Include(x => x.Claim.Group)
         .Include(x => x.Claim.Action)
         .Where(x => x.RoleId == roleId)
-        .Select(x => new Claim(IdentityClaimTypes.Caim, $"{x.Claim.Group.Name}:${x.Claim.Action.Name}"))
+        .Select(x => new Claim(IdentityClaimTypes.Caim, $"{x.Claim.Group.Name}:{x.Claim.Action.Name}"))
         .ToListAsync(cancellationToken);
+
+      if(await _context.Set<Role>().AnyAsync(row => row.Id == roleId, cancellationToken))
+        claims = claims.Append(new(IdentityClaimTypes.Caim, "root"));
 
       await _redis.HashSetAsync(
         roleKey,
