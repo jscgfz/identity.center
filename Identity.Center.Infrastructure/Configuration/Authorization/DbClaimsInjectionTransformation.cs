@@ -10,11 +10,10 @@ using StackExchange.Redis;
 
 namespace Identity.Center.Infrastructure.Configuration.Authorization;
 
-internal sealed class DbClaimsInjectionTrsformation(IServiceProvider provider) : IClaimsTransformation
+internal sealed class DbClaimsInjectionTransformation(IServiceProvider provider) : IClaimsTransformation
 {
   private readonly IClaimsManager _claimsManager = provider.GetRequiredService<IClaimsManager>();
   private readonly IdentityContext _context = provider.GetRequiredService<IdentityContext>();
-  private readonly IDatabase _redis = provider.GetRequiredService<IDatabase>();
 
   public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
   {
