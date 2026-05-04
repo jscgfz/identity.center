@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Security.Claims;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Infrastructure.Configuration.Authentication;
@@ -14,7 +16,24 @@ public sealed class IdentityPolicyBuilder
   private IdentityPolicyBuilder()
     => _policies = [];
 
+  public static IdentityPolicyBuilder Merged(params IEnumerable<IdentityPolicyBuilder> builders)
+  {
+    IdentityPolicyBuilder mainBuilder = new();
+    foreach (IdentityPolicyBuilder builder in builders)
+      mainBuilder.Append(builder);
+
+    return mainBuilder;
+  }
+
   public static IdentityPolicyBuilder Empty => new();
+
+  public IdentityPolicyBuilder Append(IdentityPolicyBuilder builder)
+  {
+    FieldInfo fieldinfo = GetType().GetField(nameof(_policies), BindingFlags.Instance | BindingFlags.NonPublic) ?? throw new ArgumentNullException(nameof(builder));
+    List<AuthorizationPolicy> policies = (List<AuthorizationPolicy>?)fieldinfo.GetValue(builder) ?? throw new ArgumentNullException(nameof(builder));
+    _policies.AddRange(policies);
+    return this;
+  }
 
   public IdentityPolicyBuilder AllowJtw()
   {
