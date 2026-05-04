@@ -30,12 +30,7 @@ public static class DependencyInjection
 
     builder
       .Services
-      .AddAuthentication(options =>
-      {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-      })
+      .AddAuthentication()
       .AddJwtBearer()
       .AddScheme<ApiKeySchemeOptions, ApiKeySchemeHandler>(
         ApiKeySchemeOptions.DefaultScheme,
@@ -45,7 +40,7 @@ public static class DependencyInjection
     builder
       .Services
       .TryAddEnumerable([
-        ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTrsformation>(),
+        ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTransformation>(),
         ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>(),
         ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>)),
         ServiceDescriptor.Scoped<IIdentityUnitOfWork, IdentityUnitOfWork>()
