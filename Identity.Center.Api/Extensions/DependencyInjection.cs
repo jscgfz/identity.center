@@ -18,6 +18,9 @@ public static class DependencyInjection
     where TBuilder : IEndpointConventionBuilder
   {
     policyBuilder.Apply(builder);
+    builder
+      .ProducesProblem(StatusCodes.Status401Unauthorized)
+      .ProducesProblem(StatusCodes.Status403Forbidden);
     return builder;
   }
   private static Action<OpenApiOptions> _options => options =>
