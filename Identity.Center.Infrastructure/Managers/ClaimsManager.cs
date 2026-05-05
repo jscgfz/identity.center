@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 using Identity.Center.Application.Abstractions.Managers;
+using Identity.Center.Application.Common.Caching;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Authentication;
@@ -22,9 +23,9 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
   {
     string apiKeyKey = RedisKeysCommon.ApiKeyHashKey(apiKey);
     IEnumerable<Claim> claims = [];
-    if (!await _redis.HashExistsAsync(apiKeyKey, RedisKeysCommon.ClaimsStore))
+    async Task<IEnumerable<Claim>> _factory()
     {
-      claims = await _context.Set<ApiKeyClaim>()
+      IEnumerable<Claim> output = await _context.Set<ApiKeyClaim>()
         .Include(x => x.Claim.Group)
         .Include(x => x.Claim.Action)
         .Where(x => x.ApiKeyId == apiKey)
@@ -32,13 +33,23 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
         .ToListAsync(cancellationToken);
 
       if (await _context.Set<ApiKey>().AnyAsync(row => row.Id == apiKey && row.Root, cancellationToken))
-        claims = claims.Append(new(IdentityClaimTypes.Caim, "root"));
+        output = output.Append(new(IdentityClaimTypes.Caim, "root"));
+
+      return output;
+    }
+
+    if (!await _redis.HashExistsAsync(apiKeyKey, RedisKeysCommon.ClaimsStore))
+    {
+      claims = await _factory();
 
       await _redis.HashSetAsync(
         apiKeyKey,
         RedisKeysCommon.ClaimsStore,
         JsonSerializer.Serialize(
-          claims.Select(claim => claim.Value),
+          new TemporaryValue<IEnumerable<string>>(
+            claims.Select(claim => claim.Value),
+            DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(5))
+          ),
           JsonSerializerOptions.Web
         )
       );
@@ -46,11 +57,29 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
     else
     {
       string decodedClaims = ((string?)await _redis.HashGetAsync(apiKeyKey, RedisKeysCommon.ClaimsStore))!;
-      claims = JsonSerializer.Deserialize<IEnumerable<string>>(
+      TemporaryValue<IEnumerable<string>> output = JsonSerializer.Deserialize<TemporaryValue<IEnumerable<string>>>(
         decodedClaims,
         JsonSerializerOptions.Web
-      )!
-        .Select(row => new Claim(IdentityClaimTypes.Caim, row));
+      )!;
+
+      if (output.ExpiresAtUtc < DateTimeOffset.UtcNow)
+      {
+        claims = await _factory();
+
+        await _redis.HashSetAsync(
+          apiKeyKey,
+          RedisKeysCommon.ClaimsStore,
+          JsonSerializer.Serialize(
+            new TemporaryValue<IEnumerable<string>>(
+              claims.Select(claim => claim.Value),
+              DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(5))
+            ),
+            JsonSerializerOptions.Web
+          )
+        );
+      }
+      else
+        claims = output.Value.Select(c => new Claim(IdentityClaimTypes.Caim, c));
     }
 
     return claims;
@@ -59,10 +88,9 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
   public async Task<IEnumerable<Claim>> ByRole(Guid roleId, CancellationToken cancellationToken = default)
   {
     string roleKey = RedisKeysCommon.RoleHashKey(roleId);
-    IEnumerable<Claim> claims = [];
-    if (!await _redis.HashExistsAsync(roleKey, RedisKeysCommon.ClaimsStore))
+    Func<Task<IEnumerable<Claim>>> _factory = async () =>
     {
-      claims = await _context.Set<RoleClaim>()
+      IEnumerable<Claim> output = await _context.Set<RoleClaim>()
         .Include(x => x.Claim.Group)
         .Include(x => x.Claim.Action)
         .Where(x => x.RoleId == roleId)
@@ -70,25 +98,53 @@ public sealed class ClaimsManager(IServiceProvider provider) : IClaimsManager
         .ToListAsync(cancellationToken);
 
       if (await _context.Set<Role>().AnyAsync(row => row.Id == roleId, cancellationToken))
-        claims = claims.Append(new(IdentityClaimTypes.Caim, "root"));
+        output = output.Append(new(IdentityClaimTypes.Caim, "root"));
+
+      return output;
+    };
+    IEnumerable<Claim> claims = [];
+    if (!await _redis.HashExistsAsync(roleKey, RedisKeysCommon.ClaimsStore))
+    {
+      claims = await _factory();
 
       await _redis.HashSetAsync(
         roleKey,
         RedisKeysCommon.ClaimsStore,
         JsonSerializer.Serialize(
-          claims.Select(claim => claim.Value),
+          new TemporaryValue<IEnumerable<string>>(
+            claims.Select(claim => claim.Value),
+            DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(5))
+          ),
           JsonSerializerOptions.Web
         )
       );
     }
     else
     {
-      string desocedClaims = ((string?)await _redis.HashGetAsync(roleKey, RedisKeysCommon.ClaimsStore))!;
-      claims = JsonSerializer.Deserialize<IEnumerable<string>>(
-        desocedClaims,
+      string decodedClaims = ((string?)await _redis.HashGetAsync(roleKey, RedisKeysCommon.ClaimsStore))!;
+      TemporaryValue<IEnumerable<string>> output = JsonSerializer.Deserialize<TemporaryValue<IEnumerable<string>>>(
+        decodedClaims,
         JsonSerializerOptions.Web
-      )!
-        .Select(row => new Claim(IdentityClaimTypes.Caim, row));
+      )!;
+
+      if (output.ExpiresAtUtc < DateTimeOffset.UtcNow)
+      {
+        claims = await _factory();
+
+        await _redis.HashSetAsync(
+          roleKey,
+          RedisKeysCommon.ClaimsStore,
+          JsonSerializer.Serialize(
+            new TemporaryValue<IEnumerable<string>>(
+              claims.Select(claim => claim.Value),
+              DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(5))
+            ),
+            JsonSerializerOptions.Web
+          )
+        );
+      }
+      else
+        claims = output.Value.Select(c => new Claim(IdentityClaimTypes.Caim, c));
     }
 
     return claims;
