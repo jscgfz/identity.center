@@ -8,6 +8,7 @@ using Identity.Center.Infrastructure.Hosting.Broker;
 using Identity.Center.Infrastructure.Managers;
 using Identity.Center.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +41,7 @@ public static class DependencyInjection
       .Services
       .TryAddEnumerable([
         ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTransformation>(),
+        ServiceDescriptor.Singleton<IAuthorizationMiddlewareResultHandler, IdentityAuthorizationHandler>(),
         ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>(),
         ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>)),
         ServiceDescriptor.Scoped<IIdentityUnitOfWork, IdentityUnitOfWork>()
