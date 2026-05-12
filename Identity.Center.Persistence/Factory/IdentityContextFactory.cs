@@ -11,27 +11,27 @@ public class IdentityContextFactory : IDesignTimeDbContextFactory<IdentityContex
 {
   public IdentityContext CreateDbContext(string[] args)
   {
-    // Construimos la configuración manualmente
     IConfigurationRoot configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        // Opcional: permite leer secretos de usuario o variables de entorno
-        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
-        .Build();
+      .SetBasePath(Directory.GetCurrentDirectory())
+      .AddEnvironmentVariables()
+      .AddJsonFile("appsettings.json")
+      .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true)
+      .Build();
 
     DbContextOptionsBuilder<IdentityContext> options = new DbContextOptionsBuilder<IdentityContext>();
-    string? connectionString = configuration.GetConnectionString(nameof(IdentityContext));
+    string connectionString = configuration.GetConnectionString(nameof(IdentityContext)) ??
+      "Server=192.168.40.106; Database=Identity.Center.Stores; User=Applications; Password=uKOn8yR177N57q9; TrustServerCertificate=true;Encrypt=False;MultipleActiveResultSets=True";
 
     options.UseSqlServer(
-          connectionString,
-          sql =>
-          {
-            sql.MigrationsHistoryTable("migrations", IdentitySchemas.Builds);
-            sql.MigrationsAssembly(Assembly.GetExecutingAssembly());
-            sql.CommandTimeout(30);
-            sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-          }
-        );
+      connectionString,
+      sql =>
+      {
+        sql.MigrationsHistoryTable("migrations", IdentitySchemas.Builds);
+        sql.MigrationsAssembly(Assembly.GetExecutingAssembly());
+        sql.CommandTimeout(30);
+        sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+      }
+    );
     options.EnableDetailedErrors();
     options.EnableSensitiveDataLogging();
     options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
