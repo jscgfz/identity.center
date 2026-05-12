@@ -9,5 +9,6 @@ public sealed record CreatedCredentialDto(
   Guid? Id,
   Guid? AppId,
   int CredentialTypeId,
-  string Value
+  string Value,
+  DateTimeOffset CreatedAtUtc
 );
