@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Identity.Center.Domain.Common.Models.Cryptography;
 using Identity.Center.Domain.Entities.Core.Authentication;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Identity.Center.Domain.Common;
 
@@ -20,28 +21,42 @@ public static class IdentityCommons
   }
   public static Encoding Encoding => Encoding.UTF8;
   public static byte[] NewHashKey => RandomNumberGenerator.GetBytes(32);
-  public static async Task<HashCreationResponse> NewHash(string? value = null, CancellationToken cancellationToken = default)
+  public static Task<HashCreationResponse> NewHash(string? value = null, CancellationToken cancellationToken = default)
   {
     byte[] salt = NewHashKey;
     value ??= Encoding.GetString(NewHashKey);
-    using HMACSHA256 hmac = new(salt);
-    using MemoryStream memo = new(Encoding.GetBytes(value));
-    byte[] hash = await hmac.ComputeHashAsync(memo, cancellationToken).ConfigureAwait(false);
-    return new(
-      salt,
-      hash,
-      value
+    byte[] hash = KeyDerivation.Pbkdf2(
+      password: value,
+      salt: salt,
+      prf: KeyDerivationPrf.HMACSHA256,
+      iterationCount: 100_000,
+      numBytesRequested: salt.Length
+    );
+
+    return Task.FromResult(
+      new HashCreationResponse(
+        salt,
+        hash,
+        value
+      )
     );
   }
-  public static async Task<HashValidationResponse> ValidateHash(HashValidationRequest request, CancellationToken cancellationToken = default)
+  public static Task<HashValidationResponse> ValidateHash(HashValidationRequest request, CancellationToken cancellationToken = default)
   {
-    using HMACSHA256 hmac = new(request.Salt);
-    using MemoryStream memo = new(Encoding.GetBytes(request.Value));
-    byte[] hashResult = await hmac.ComputeHashAsync(memo, cancellationToken).ConfigureAwait(false);
-    return new(
-      hashResult.SequenceEqual(request.Hash),
-      request.Value,
-      request.Hash
+    byte[] hashResult = KeyDerivation.Pbkdf2(
+      password: request.Value,
+      salt: request.Salt,
+      prf: KeyDerivationPrf.HMACSHA256,
+      iterationCount: 100_000,
+      request.Salt.Length
+    );
+
+    return Task.FromResult(
+      new HashValidationResponse(
+        hashResult.SequenceEqual(request.Hash),
+        request.Value,
+        request.Hash
+      )
     );
   }
 }
