@@ -28,6 +28,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<Guid>("AppId")
@@ -56,7 +57,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasColumnOrder(2);
 
                     b.Property<byte[]>("Hash")
                         .IsRequired()
@@ -80,7 +82,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnOrder(1);
 
                     b.Property<bool>("Root")
                         .ValueGeneratedOnAdd()
@@ -109,6 +112,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -293,6 +297,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<Guid>("ActionId")
@@ -344,6 +349,377 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.HasIndex("GroupId");
 
                     b.ToTable("claims", "auth");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("2950cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1d842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("2a50cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1d842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("2b50cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1d842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("2c50cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1d842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("2d50cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("19842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("2e50cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("19842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("2f50cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6743da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("19842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("3050cf98-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("19842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("a554cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1c842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("a654cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1c842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("a754cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1c842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("a854cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1c842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("a954cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1a842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("aa54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1e842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("ab54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1e842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("ac54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1e842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("ad54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1e842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("ae54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("17842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("af54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("17842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b054cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("17842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b154cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("17842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b254cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("18842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b354cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("18842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b454cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("18842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b554cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("18842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b654cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1b842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b754cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1b842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b854cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1b842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("b954cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("1b842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("ba54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("16842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("bb54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("16842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("bc54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("16842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("bd54cc9e-0e44-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("16842a5f-3943-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("66ca6fe3-ba48-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("9daff3d6-ba48-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("67ca6fe3-ba48-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("9daff3d6-ba48-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("68ca6fe3-ba48-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("9daff3d6-ba48-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("69ca6fe3-ba48-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("9daff3d6-ba48-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("51e4990e-9a49-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("c93e61d8-9949-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("52e4990e-9a49-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("c93e61d8-9949-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("54e4990e-9a49-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("c93e61d8-9949-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        },
+                        new
+                        {
+                            Id = new Guid("57e4990e-9a49-f111-81e9-00505682eca9"),
+                            ActionId = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            GroupId = new Guid("c93e61d8-9949-f111-81e9-00505682eca9"),
+                            IsDeleted = false
+                        });
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authorization.RoleClaim", b =>
@@ -454,6 +830,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -478,7 +855,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasColumnOrder(2);
 
                     b.Property<string>("DomainName")
                         .HasColumnType("nvarchar(max)")
@@ -508,7 +886,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnOrder(1);
 
                     b.Property<string>("Prefix")
                         .IsRequired()
@@ -718,7 +1097,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("id");
+                        .HasColumnName("id")
+                        .HasColumnOrder(0);
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
@@ -756,7 +1136,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasColumnOrder(2);
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -775,7 +1156,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
@@ -848,6 +1230,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<Guid>("AppId")
@@ -918,6 +1301,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<bool>("Confirmed")
@@ -992,6 +1376,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<bool>("ActiveDirectoryMandatory")
@@ -1075,6 +1460,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -1135,6 +1521,10 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("last_modified_by");
 
+                    b.Property<byte[]>("MfaSignature")
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("mfa_signature");
+
                     b.Property<string>("SecondLastName")
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)")
@@ -1159,6 +1549,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -1183,7 +1574,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasColumnOrder(2);
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -1202,7 +1594,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
@@ -1210,6 +1603,62 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .IsUnique();
 
                     b.ToTable("actions", "sec");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("6343da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Descargar",
+                            IsDeleted = false,
+                            Name = "download"
+                        },
+                        new
+                        {
+                            Id = new Guid("6443da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Crear",
+                            IsDeleted = false,
+                            Name = "create"
+                        },
+                        new
+                        {
+                            Id = new Guid("6543da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Ver",
+                            IsDeleted = false,
+                            Name = "view"
+                        },
+                        new
+                        {
+                            Id = new Guid("6643da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Modificar/Actualizar",
+                            IsDeleted = false,
+                            Name = "update"
+                        },
+                        new
+                        {
+                            Id = new Guid("6743da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Cargar",
+                            IsDeleted = false,
+                            Name = "upload"
+                        },
+                        new
+                        {
+                            Id = new Guid("6843da36-3343-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Eliminar",
+                            IsDeleted = false,
+                            Name = "delete"
+                        });
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AppAuth", b =>
@@ -1368,6 +1817,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<string>("ContactTypeKey")
@@ -1397,7 +1847,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasColumnOrder(2);
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -1416,7 +1867,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
@@ -1467,6 +1919,7 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("id")
+                        .HasColumnOrder(0)
                         .HasDefaultValueSql("newsequentialid()");
 
                     b.Property<DateTimeOffset>("CreatedAtUtc")
@@ -1491,7 +1944,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)")
-                        .HasColumnName("description");
+                        .HasColumnName("description")
+                        .HasColumnOrder(2);
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -1510,7 +1964,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)")
-                        .HasColumnName("name");
+                        .HasColumnName("name")
+                        .HasColumnOrder(1);
 
                     b.HasKey("Id");
 
@@ -1518,6 +1973,107 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         .IsUnique();
 
                     b.ToTable("groups", "sec");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("16842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Usuarios",
+                            IsDeleted = false,
+                            Name = "users"
+                        },
+                        new
+                        {
+                            Id = new Guid("17842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Grupos",
+                            IsDeleted = false,
+                            Name = "groups"
+                        },
+                        new
+                        {
+                            Id = new Guid("18842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "HealtChecks",
+                            IsDeleted = false,
+                            Name = "healtchecks"
+                        },
+                        new
+                        {
+                            Id = new Guid("19842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Aplicaciones",
+                            IsDeleted = false,
+                            Name = "apps"
+                        },
+                        new
+                        {
+                            Id = new Guid("1a842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Tipos de contacto",
+                            IsDeleted = false,
+                            Name = "contacttypes"
+                        },
+                        new
+                        {
+                            Id = new Guid("1b842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Configuraciones",
+                            IsDeleted = false,
+                            Name = "settings"
+                        },
+                        new
+                        {
+                            Id = new Guid("1c842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Permisos",
+                            IsDeleted = false,
+                            Name = "claims"
+                        },
+                        new
+                        {
+                            Id = new Guid("1d842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Acciones",
+                            IsDeleted = false,
+                            Name = "actions"
+                        },
+                        new
+                        {
+                            Id = new Guid("1e842a5f-3943-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Tipos de credenciales",
+                            IsDeleted = false,
+                            Name = "credentialtypes"
+                        },
+                        new
+                        {
+                            Id = new Guid("9daff3d6-ba48-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Api keys",
+                            IsDeleted = false,
+                            Name = "apikeys"
+                        },
+                        new
+                        {
+                            Id = new Guid("c93e61d8-9949-f111-81e9-00505682eca9"),
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            Description = "Credenciales de usuario",
+                            IsDeleted = false,
+                            Name = "credentials"
+                        });
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authentication.ApiKey", b =>
