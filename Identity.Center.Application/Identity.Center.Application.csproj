@@ -18,4 +18,9 @@
     <ProjectReference Include="..\Identity.Center.Domain\Identity.Center.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Credentials\Queries\" />
+    <Folder Include="Features\Roles\Queries\" />
+  </ItemGroup>
+
 </Project>
