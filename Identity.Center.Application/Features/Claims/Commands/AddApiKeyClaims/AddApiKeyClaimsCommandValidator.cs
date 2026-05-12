@@ -24,7 +24,10 @@ internal sealed class AddApiKeyClaimsCommandValidator : AbstractValidator<AddApi
       .WithMessage("No se encontró ninguna api key con el identificador del sujeto");
 
     RuleFor(row => row.Claims)
-      .NotEmpty();
+      .Must(field => field != null && field.Any())
+      .WithErrorCode("Empty")
+      .WithMessage("Claims obligatorios");
+
     RuleForEach(row => row.Claims)
       .Must(IdentityCommons.IsValidClaim)
       .OverridePropertyName("Claims")
