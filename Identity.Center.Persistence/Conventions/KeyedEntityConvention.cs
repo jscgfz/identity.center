@@ -14,6 +14,7 @@ internal sealed class KeyedEntityConvention : IModelFinalizingConvention
     foreach (IConventionProperty conventionProperty in modelBuilder.Metadata.GetEntityTypes().Where(IsInherited).Select(GetId))
     {
       conventionProperty.SetColumnName("id");
+      conventionProperty.Builder.HasColumnOrder(0);
       _ = conventionProperty.ClrType switch
       {
         Type t when t == typeof(Guid) => SetGuid(conventionProperty),

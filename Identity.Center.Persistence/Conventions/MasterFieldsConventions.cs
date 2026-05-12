@@ -14,8 +14,10 @@ internal sealed class MasterFieldsConventions : IModelFinalizingConvention
     {
       IConventionProperty name = entityType.FindProperty(nameof(IMasterFields.Name)) ?? throw new NullReferenceException();
       name.SetColumnName(nameof(name));
+      name.Builder.HasColumnOrder(1);
       IConventionProperty description = entityType.FindProperty(nameof(IMasterFields.Description)) ?? throw new NullReferenceException();
       description.SetColumnName(nameof(description));
+      description.Builder.HasColumnOrder(2);
       IConventionIndex index = entityType.AddIndex(name) ?? throw new NullReferenceException();
       index.SetIsUnique(true);
     }
