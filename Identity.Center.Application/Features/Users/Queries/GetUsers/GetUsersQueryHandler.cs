@@ -3,6 +3,8 @@ using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Abstractions.Result;
 using Identity.Center.Application.Common;
 using Identity.Center.Application.Extensions;
+using Identity.Center.Application.Features.Credentials.Dtos;
+using Identity.Center.Application.Features.Roles.Dtos;
 using Identity.Center.Application.Features.Users.Dtos;
 using Identity.Center.Application.Result;
 using Identity.Center.Domain.Entities.Core.Identity;
@@ -49,7 +51,34 @@ internal sealed class GetUsersQueryHandler(IServiceProvider provider) : IQueryHa
             info.Value,
             info.Confirmed,
             info.CreatedAtUtc
-          ))
+          )),
+          row.DomainCredentials.Where(
+            dc => dc.CredentialType.Apps.Any(a => a.AppId == appId)
+          ).Select(dc => new CreatedCredentialDto(
+              dc.Id,
+              null,
+              dc.CredentialTypeId,
+              dc.Username,
+              dc.CreatedAtUtc
+          )),
+          row.SingleCredentials.Where(sc => sc.AppId == appId)
+            .Select(sc => new CreatedCredentialDto(
+              null,
+              null,
+              default,
+              sc.Username,
+              sc.CreatedAtUtc
+            )),
+          row.Roles.Where(r => r.Role.AppId == appId)
+            .Select(r => new RoleDto(
+              r.RoleId,
+              null,
+              r.Role.Name,
+              r.Role.Description,
+              r.Role.DomainName,
+              r.Role.Root,
+              r.Role.CreatedAtUtc
+            ))
         )),
       request,
       cancellationToken
