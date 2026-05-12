@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Identity.Center.Api.Configuration;
 using Identity.Center.Api.Configuration.Authorization;
+using Identity.Center.Api.Configuration.Endpoints;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
@@ -97,6 +99,14 @@ public static class DependencyInjection
       .Services
       .AddEndpointsApiExplorer();
 
+    //builder
+    //  .WebHost
+    //  .ConfigureKestrel(options =>
+    //  {
+    //    options.Limits.MaxRequestBodySize = null;
+    //    options.Limits.MinResponseDataRate = null;
+    //  });
+
     _ = documentName switch
     {
       null => builder.Services.AddOpenApi(_options),
@@ -118,7 +128,7 @@ public static class DependencyInjection
       })
       .AddApiExplorer(options =>
       {
-        options.GroupNameFormat = "'v'VVV"; // Esto genera "v1", "v2", etc.
+        options.GroupNameFormat = "'v'VVV";
         options.SubstituteApiVersionInUrl = true;
       });
     return builder;
@@ -149,6 +159,13 @@ public static class DependencyInjection
       foreach (ApiVersionDescription version in versions)
         options.SwaggerEndpoint($"/openapi/{version.GroupName}/openapidoc.json", version.GroupName);
       options.RoutePrefix = "reference";
+      options.DocumentTitle = "identity-center-services";
+      options.DisplayRequestDuration();
+      options.DisplayOperationId();
+      options.EnableDeepLinking();
+      options.EnableFilter();
+      options.HeadContent = "<link rel='icon' type='image/ico' href='https://www.finanzauto.com.co/portal/icon.ico' sizes='32x32' />";
+      options.ConfigObject.AdditionalItems["cdn_url"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/";
     });
     return app;
   }
@@ -165,6 +182,10 @@ public static class DependencyInjection
 
   public static WebApplicationBuilder WithProblemDetails(this WebApplicationBuilder builder)
   {
+    builder
+      .Services
+      .AddHttpContextAccessor();
+
     builder
       .Services
       .AddProblemDetails(options =>
@@ -190,6 +211,48 @@ public static class DependencyInjection
         };
       });
 
+    return builder;
+  }
+
+  public static TBuilder AddRequirement<TBuilder>(this TBuilder builder, string type, string value)
+    where TBuilder : IEndpointConventionBuilder
+  {
+    builder.Add(b =>
+    {
+      b.Metadata.Add(new RequirementLabel(type, value));
+    });
+    return builder;
+  }
+
+  public static TBuilder BuildRequirements<TBuilder>(this TBuilder builder, string? description = null)
+    where TBuilder : IEndpointConventionBuilder
+  {
+    builder.Add(b =>
+    {
+      StringBuilder stringBuilder = new();
+      IEnumerable<RequirementLabel> requirements = b.Metadata.OfType<RequirementLabel>();
+      if (requirements.Any())
+      {
+        stringBuilder.AppendLine("### Requerimientos");
+        stringBuilder.AppendLine(string.Empty);
+        stringBuilder.AppendLine("| Tipo | Valor |");
+        stringBuilder.AppendLine("| :--- | :--- |");
+        foreach (RequirementLabel requirement in requirements.OrderBy(r => r.Type + "-" + r.Value))
+          stringBuilder.AppendLine($"| {requirement.Type} | {requirement.Value} |");
+
+      }
+      if (!string.IsNullOrEmpty(description))
+      {
+        stringBuilder.AppendLine("### Descripción");
+        stringBuilder.AppendLine(string.Empty);
+        stringBuilder.AppendLine(description);
+      }
+
+      string data = stringBuilder.ToString();
+      if (!string.IsNullOrWhiteSpace(data))
+        b.Metadata.Add(new EndpointDescriptionAttribute(data));
+
+    });
     return builder;
   }
 }
