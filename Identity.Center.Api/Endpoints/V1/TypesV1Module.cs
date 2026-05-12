@@ -4,6 +4,7 @@ using Identity.Center.Api.Configuration.Authorization;
 using Identity.Center.Api.Extensions;
 using Identity.Center.Application.Common.Response;
 using Identity.Center.Application.Features.Types.Queries.GetContactTypes;
+using Identity.Center.Application.Features.Types.Queries.GetCredentialTypes;
 using Identity.Center.Application.Result;
 using Identity.Center.Domain.Enums;
 using MediatR;
