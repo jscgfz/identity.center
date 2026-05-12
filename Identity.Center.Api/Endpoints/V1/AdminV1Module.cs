@@ -34,16 +34,17 @@ public sealed class AdminV1Module : IIdentityModule
         IdentityPolicyBuilder
           .Empty
           .RequireRoot()
-      );
+      )
+      .AddRequirement("user", "root");
 
     MapAppRoutes(
       group
         .MapGroup("/apps")
-        .WithTags("Administración apps")
+        .WithTags("apps_admin")
         .WithIdentityAuthorization(
           BaseIdentityPolicies.ApiKey
         )
-        .WithDescription("administración de las apps del sistema")
+        .AddRequirement("authorization", "apikey")
     );
 
     MapClaimsRoutes(
@@ -56,8 +57,9 @@ public sealed class AdminV1Module : IIdentityModule
               BaseIdentityPolicies.Jwt
             )
         )
-        .WithTags("Administración claims")
-        .WithDescription("administración de los claims del sistema")
+        .WithTags("claims_admin")
+        .AddRequirement("authorization", "apikey")
+        .AddRequirement("authorization", "jwt")
     );
 
     MapApiKeysRoutes(
@@ -70,8 +72,9 @@ public sealed class AdminV1Module : IIdentityModule
               BaseIdentityPolicies.Jwt
             )
         )
-        .WithTags("Administración api keys")
-        .WithDescription("administración de las api keys del sistema")
+        .WithTags("apikey_admin")
+        .AddRequirement("authorization", "apikey")
+        .AddRequirement("authorization", "jwt")
     );
   }
 
@@ -87,7 +90,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("apps:view")
       )
-      .WithDescription("Obtiene la paginación de las aplicaciones")
+      .AddRequirement("claims", "apps:view")
+      .BuildRequirements("Obtiene la paginación de las aplicaciones")
       .Produces<IPaginatedResult<AppDto>>();
 
     group.MapPost(
@@ -99,7 +103,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("apps:create")
       )
-      .WithDescription("Crea una aplicación")
+      .AddRequirement("claims", "apps:create")
+      .BuildRequirements("Crea una aplicación")
       .Produces<CreatedAppDto>();
 
     group.MapGet(
@@ -112,7 +117,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("apps:view")
       )
-      .WithDescription("Obtiene la informacón de una aplicaciín concreta")
+      .AddRequirement("claims", "apps:view")
+      .BuildRequirements("Obtiene la informacón de una aplicaciín concreta")
       .Produces<AppDto>();
 
     group.MapGet(
@@ -125,7 +131,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("apps:view")
       )
-      .WithDescription("Obtiene la información de autenticación de una aplicación")
+      .AddRequirement("claims", "apps:view")
+      .BuildRequirements("Obtiene la información de autenticación de una aplicación")
       .Produces<AppAuthDto>();
   }
 
@@ -140,7 +147,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("actions:view")
       )
-      .WithDescription("Obtiene las acciones de los claims del sistema")
+      .AddRequirement("claims", "actions:view")
+      .BuildRequirements("Obtiene las acciones de los claims del sistema")
       .Produces<IPaginatedResult<MasterClaimPart>>();
 
     group
@@ -152,7 +160,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("groups:view")
       )
-      .WithDescription("Obtiene los grupos de los claims del sistema");
+      .AddRequirement("claims", "groups:view")
+      .BuildRequirements("Obtiene los grupos de los claims del sistema");
 
     group
       .MapPost("/actions", async (AddActionsCommand cmd, ISender sender) =>
@@ -163,7 +172,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("actions:create")
       )
-      .WithDescription("Crea nuevas acciones para configurar claims del sistema");
+      .AddRequirement("claims", "actions:create")
+      .BuildRequirements("Crea nuevas acciones para configurar claims del sistema");
 
     group
       .MapPost("/groups", async (AddGroupsCommand cmd, ISender sender) =>
@@ -174,7 +184,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("groups:create")
       )
-      .WithDescription("Crea nuevos grupos para configurar claims del sistema");
+      .AddRequirement("claims", "groups:create")
+      .BuildRequirements("Crea nuevos grupos para configurar claims del sistema");
   }
 
   private static void MapApiKeysRoutes(RouteGroupBuilder group)
@@ -189,7 +200,8 @@ public sealed class AdminV1Module : IIdentityModule
           .RequireClaims("apikeys:view")
       )
       .Produces<IPaginatedResult<ApiKeyDto>>()
-      .WithDescription("Obtiene información de las api keys creadas en el sistema");
+      .AddRequirement("claims", "apikeys:view")
+      .BuildRequirements("Obtiene información de las api keys creadas en el sistema");
 
     group
       .MapGet("/{subjectId}", async (Guid subjectId, ISender sender) =>
@@ -201,7 +213,8 @@ public sealed class AdminV1Module : IIdentityModule
           .RequireClaims("apikeys:view")
       )
       .Produces<ApiKeyDto>()
-      .WithDescription("Obtiene información de una api key especifica");
+      .AddRequirement("claims", "apikeys:view")
+      .BuildRequirements("Obtiene información de una api key especifica");
 
     group
       .MapPost(string.Empty, async (AddApiKeyCommand cmd, ISender sender) =>
@@ -212,8 +225,9 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("apikeys:create")
       )
+      .AddRequirement("claims", "apikeys:create")
       .Produces<CreatedApkiKeyDto>()
-      .WithDescription("Crea un api key para el consumo del sistema");
+      .BuildRequirements("Crea un api key para el consumo del sistema");
 
     group
       .MapPost("/claims", async (AddApiKeyClaimsCommand cmd, ISender sender) =>
@@ -224,7 +238,8 @@ public sealed class AdminV1Module : IIdentityModule
           .Empty
           .RequireClaims("apikeys:create")
       )
+      .AddRequirement("claims", "apikeys:create")
       .Produces<RelatedClaimDto>()
-      .WithDescription("Agrega claims a una api key del sistema");
+      .BuildRequirements("Agrega claims a una api key del sistema");
   }
 }

@@ -16,7 +16,7 @@ public sealed class TypesV1Module : IIdentityModule
   {
     RouteGroupBuilder group = builder
       .MapGroup("/types")
-      .WithTags("Definición de tipos")
+      .WithTags("types_def")
       .WithIdentityAuthorization(
         IdentityPolicyBuilder
           .Merged(
@@ -24,7 +24,8 @@ public sealed class TypesV1Module : IIdentityModule
             BaseIdentityPolicies.ApiKey
           )
       )
-      .WithDescription("Definición de los tipos de datos del sistema");
+      .AddRequirement("autorization", "apikey")
+      .AddRequirement("autorization", "jwt");
 
     group
       .MapGet("/contact", async ([AsParameters] GetContactTypesQuery query, ISender sender) =>
@@ -36,6 +37,20 @@ public sealed class TypesV1Module : IIdentityModule
             .RequireClaims("contacttypes:view")
         )
         .Produces<IEnumerable<MasterOption<ContactTypes>>>()
-        .WithDescription("Obtiene los tipos de contacto configurados en el sistema");
+        .AddRequirement("claims", "contacttypes:view")
+        .BuildRequirements("Obtiene los tipos de contacto configurados en el sistema");
+
+    group
+      .MapGet("/credentials", async ([AsParameters] GetCredentialTypesQuery query, ISender sender) =>
+        await sender.Send(query).AsHttpResult()
+      )
+        .WithIdentityAuthorization(
+          IdentityPolicyBuilder
+            .Empty
+            .RequireClaims("credentialtypes:view")
+        )
+        .Produces<IEnumerable<MasterOption<int>>>()
+        .AddRequirement("claims", "credentialtypes:view")
+        .BuildRequirements("Obtiene los tipos de credenciales configuradas en el sistema");
   }
 }
