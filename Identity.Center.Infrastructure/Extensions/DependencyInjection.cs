@@ -4,6 +4,7 @@ using Identity.Center.Application.Common.Options;
 using Identity.Center.Domain.Enums;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Identity.Center.Infrastructure.Configuration.Authorization;
+using Identity.Center.Infrastructure.Configuration.Configuration;
 using Identity.Center.Infrastructure.Hosting.Broker;
 using Identity.Center.Infrastructure.Managers;
 using Identity.Center.Infrastructure.Repositories;
@@ -22,6 +23,18 @@ namespace Identity.Center.Infrastructure.Extensions;
 
 public static class DependencyInjection
 {
+  public static WebApplicationBuilder WithConfigurationContext(this WebApplicationBuilder builder)
+  {
+    IConfigurationBuilder config = builder.Configuration;
+    config.Add(
+      new IdentityConfigurationSource(
+        builder.Services.BuildServiceProvider(),
+        new IdentityConfigurationChangeDetector(TimeSpan.FromMinutes(5))
+      )
+    );
+    return builder;
+  }
+
   public static WebApplicationBuilder WithAuth(this WebApplicationBuilder builder)
   {
     builder

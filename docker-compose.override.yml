@@ -10,6 +10,8 @@ services:
       - BrokerOptions:Password=${RABBITMQ_DEFAULT_PASS}
       - BrokerOptions:VirtualHost=/
       - BrokerOptions:Exchange=comms.exchange
+      - ConnectionStrings:IdentityContext=${ASPNETCORE_APPCONNECTIONSTRING}
+      - WithConfigurationContext:Id=${IDENTITY_MAINAPP_ID}
     ports:
       - "56676:8080"
   identity.center.redis:
