@@ -43,5 +43,11 @@ internal sealed class AddCredentialsCommandValidator : AbstractValidator<AddCred
       .MustAsync(async (field, cancellationToken) => !await domainCredentialRepo.Data.AnyAsync(row => row.Username == field.Value && row.CredentialTypeId == field.CredentialTypeId, cancellationToken))
       .WithErrorCode("Duplicated")
       .WithMessage((ob, field) => $"Credenciales con nombre de usuario {field.Value} ya registradas");
+
+    RuleForEach(row => row.Credentials)
+      .WhereAsync(async (field) => await typeRepo.Data.AnyAsync(row => row.Id == field.CredentialTypeId && row.AuthType == Domain.Enums.AuthenticationMethods.LDAP))
+      .Must(field => false)
+      .WithErrorCode("NotAvailable")
+      .WithMessage("Credenciales nativas de LDAP no configurada");
   }
 }

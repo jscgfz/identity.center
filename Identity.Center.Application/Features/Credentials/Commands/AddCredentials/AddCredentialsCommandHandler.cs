@@ -2,6 +2,8 @@
 using Identity.Center.Application.Abstractions.Result;
 using Identity.Center.Application.Features.Credentials.Dtos;
 using Identity.Center.Application.Result;
+using Identity.Center.Domain.Common;
+using Identity.Center.Domain.Common.Models.Cryptography;
 using Identity.Center.Domain.Entities.Core.Authentication;
 using Identity.Center.Domain.Entities.Core.Builds;
 using Identity.Center.Domain.Enums;
@@ -32,6 +34,48 @@ internal sealed class AddCredentialsCommandHandler(IServiceProvider provider) : 
         (c, t) => KeyValuePair.Create(t.Value, c)
       );
 
+    foreach(CredentialRequestDto credential in credentials.Where(row => row.Key == AuthenticationMethods.Single).Select(row => row.Value))
+    {
+      HashCreationResponse hash = await IdentityCommons.NewHash(null, cancellationToken);
+      SingleCredential singleCredential = new()
+      {
+        AppId = credential.AppId!.Value,
+        Hash = hash.Hash,
+        Salt = hash.Salt,
+        UserId = request.UserId,
+        Username = credential.Value
+      };
 
+      await _singleRepo.AddAsync(singleCredential, cancellationToken);
+      await _unitOfWork.SaveChangesAsync(cancellationToken);
+      createdCredentialDtos.Add(new(
+        null,
+        singleCredential.AppId,
+        credential.CredentialTypeId,
+        singleCredential.Username,
+        singleCredential.CreatedAtUtc
+      ));
+    }
+
+    foreach (CredentialRequestDto credential in credentials.Where(row => row.Key == AuthenticationMethods.Quamtum).Select(row => row.Value))
+    {
+      DomainCredential domainCredential = new()
+      {
+        CredentialTypeId = credential.CredentialTypeId,
+        UserId = request.UserId,
+        Username = credential.Value
+      };
+      await _domainRepo.AddAsync(domainCredential, cancellationToken);
+      await _unitOfWork.SaveChangesAsync(cancellationToken);
+      createdCredentialDtos.Add(new(
+        domainCredential.Id,
+        null,
+        domainCredential.CredentialTypeId,
+        domainCredential.Username,
+        domainCredential.CreatedAtUtc
+      ));
+    }
+
+    return createdCredentialDtos;
   }
 }
