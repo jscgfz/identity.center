@@ -12,6 +12,7 @@ public class User : Entity<Guid>
   public string? SecondName { get; set; }
   public required string FirstLastName { get; set; }
   public string? SecondLastName { get; set; }
+  public byte[]? MfaSignature { get; set; }
 
   public virtual ICollection<ContactInfo> ContactInfo { get; set; } = [];
   public virtual ICollection<DomainCredential> DomainCredentials { get; set; } = [];
