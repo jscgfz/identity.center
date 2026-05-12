@@ -36,6 +36,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
       .HasColumnName("second_lastname")
       .HasMaxLength(30);
     builder
+      .Property(row => row.MfaSignature)
+      .HasColumnName("mfa_signature");
+    builder
       .HasIndex(row => new { row.DocumentType, row.DocumentNumber })
       .IsUnique();
   }
