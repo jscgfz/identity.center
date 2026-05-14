@@ -124,6 +124,29 @@ public static class DependencyInjection
     return builder;
   }
 
+  public static WebApplicationBuilder WithNotificationStrategy(this WebApplicationBuilder builder)
+  {
+    builder
+      .Services
+      .AddOptions<SmtpOptions>()
+      .Bind(
+        builder.Configuration
+          .GetRequiredSection(nameof(SmtpOptions))
+      )
+      .ValidateOnStart();
+
+    builder
+      .Services
+      .AddOptions<MasivianOptions>()
+      .Bind(
+        builder.Configuration
+          .GetRequiredSection(nameof(MasivianOptions))
+      )
+      .ValidateOnStart();
+
+    return builder;
+  }
+
   public static WebApplicationBuilder WithCache(this WebApplicationBuilder builder)
   {
 
