@@ -15,26 +15,5 @@ internal static class IdentityValueConverters
 
   public static ValueConverter<TEnum, string> EnumJson<TEnum>()
     where TEnum : struct
-  {
-    Func<TEnum, string> toString = v =>
-    {
-      Type type = typeof(TEnum);
-      MemberInfo? memberInfo = type.GetMember(v.ToString()!).FirstOrDefault();
-      return memberInfo is null
-        ? throw new InvalidOperationException()
-        : memberInfo.GetCustomAttribute<JsonStringEnumMemberNameAttribute>()?.Name ?? throw new InvalidOperationException();
-    };
-
-    Func<string, TEnum> toEnum = v =>
-    {
-      Type type = typeof(TEnum);
-      MemberInfo? memberInfo = type.GetMembers()
-        .FirstOrDefault(mi => mi.GetCustomAttribute<JsonStringEnumMemberNameAttribute>() is JsonStringEnumMemberNameAttribute attr && attr.Name.Equals(v));
-      return memberInfo is null
-        ? throw new InvalidOperationException()
-        : Enum.Parse<TEnum>(memberInfo.Name);
-    };
-
-    return new(v => toString(v), v => toEnum(v));
-  }
+    => new(v => IdentityCommons.Serialize(v), v => IdentityCommons.Deserialize<TEnum>(v));
 }
