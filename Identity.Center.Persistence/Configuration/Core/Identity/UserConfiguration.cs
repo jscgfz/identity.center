@@ -41,5 +41,7 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
     builder
       .HasIndex(row => new { row.DocumentType, row.DocumentNumber })
       .IsUnique();
+    builder
+      .Ignore(row => row.FullName);
   }
 }
