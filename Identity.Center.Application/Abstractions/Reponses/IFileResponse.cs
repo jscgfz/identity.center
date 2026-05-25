@@ -4,5 +4,5 @@ namespace Identity.Center.Application.Abstractions.Reponses;
 
 public interface IFileResponse
 {
-  Task<FileContentResponse> Render();
+  FileContentResponse Render();
 }
