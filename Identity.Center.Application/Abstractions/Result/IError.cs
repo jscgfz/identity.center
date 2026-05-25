@@ -2,5 +2,5 @@
 
 public interface IError
 {
-  KeyValuePair<string, string> Seralize();
+  KeyValuePair<string, object?> Seralize();
 }
