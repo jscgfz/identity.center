@@ -27,10 +27,7 @@ internal sealed class AddApiKeyCommandHandler(IServiceProvider provider) : IComm
   public async Task<Result<CreatedApkiKeyDto>> Handle(AddApiKeyCommand request, CancellationToken cancellationToken)
   {
     App app = await _appRepo.Data.FirstAsync(row => row.Id == request.AppId, cancellationToken);
-    HashCreationResponse hash = await IdentityCommons.NewHash(
-      $"{app.Prefix}-{Convert.ToHexString(IdentityCommons.NewHashKey).ToLower()}",
-      cancellationToken
-    );
+    HashCreationResponse hash = await IdentityCommons.NewHash($"{app.Prefix}-{Convert.ToHexString(IdentityCommons.NewHashKey).ToLower()}");
     ApiKey apikey = new()
     {
       AppId = request.AppId,
