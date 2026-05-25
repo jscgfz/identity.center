@@ -13,7 +13,17 @@ public class User : Entity<Guid>
   public required string FirstLastName { get; set; }
   public string? SecondLastName { get; set; }
   public byte[]? MfaSignature { get; set; }
-
+  public string FullName => string.Join(
+    ' ',
+    new[]
+    {
+      FirstName,
+      SecondName,
+      FirstLastName,
+      SecondLastName,
+    }
+    .OfType<string>()
+  );
   public virtual ICollection<ContactInfo> ContactInfo { get; set; } = [];
   public virtual ICollection<DomainCredential> DomainCredentials { get; set; } = [];
   public virtual ICollection<SingleCredential> SingleCredentials { get; set; } = [];
