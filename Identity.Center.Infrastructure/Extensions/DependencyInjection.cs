@@ -1,22 +1,30 @@
-﻿using Identity.Center.Application.Abstractions.Managers;
+﻿using Identity.Center.Application.Abstractions.Clients;
+using Identity.Center.Application.Abstractions.Managers;
 using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Common.Options;
+using Identity.Center.Domain.Common;
+using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Enums;
+using Identity.Center.Infrastructure.Common;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Identity.Center.Infrastructure.Configuration.Authorization;
 using Identity.Center.Infrastructure.Configuration.Configuration;
+using Identity.Center.Infrastructure.Configuration.Logger;
 using Identity.Center.Infrastructure.Hosting.Broker;
 using Identity.Center.Infrastructure.Managers;
 using Identity.Center.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using Refit;
 using StackExchange.Redis;
 
 namespace Identity.Center.Infrastructure.Extensions;
@@ -31,7 +39,17 @@ public static class DependencyInjection
         builder.Services.BuildServiceProvider(),
         new IdentityConfigurationChangeDetector(TimeSpan.FromMinutes(5))
       )
-    );
+    )
+    //.Add(
+    //  new JsonConfigurationSource()
+    //  {
+    //    Optional = false,
+    //    ReloadDelay = TimeSpan.FromMinutes(5).Milliseconds,
+    //    ReloadOnChange = true,
+    //    Path = Path.Combine(builder.Environment.ContentRootPath, "Templates", "notifications.json")
+    //  }
+    //)
+    ;
     return builder;
   }
 
@@ -55,10 +73,16 @@ public static class DependencyInjection
       .TryAddEnumerable([
         ServiceDescriptor.Transient<IClaimsTransformation, DbClaimsInjectionTransformation>(),
         ServiceDescriptor.Singleton<IAuthorizationMiddlewareResultHandler, IdentityAuthorizationHandler>(),
+        ServiceDescriptor.Singleton<IAuthorizationPolicyProvider, BdClaimsPolicyProvider>(),
         ServiceDescriptor.Transient<IClaimsManager, ClaimsManager>(),
         ServiceDescriptor.Scoped(typeof(IIdentityRepository<>), typeof(IdentityRepository<>)),
-        ServiceDescriptor.Scoped<IIdentityUnitOfWork, IdentityUnitOfWork>()
+        ServiceDescriptor.Scoped<IIdentityUnitOfWork, IdentityUnitOfWork>(),
+        ServiceDescriptor.Scoped<ITokenManager, TokenManager>()
       ]);
+
+    builder
+      .Services
+      .ConfigureOptions<AuthorizationConfigurer>();
 
     builder
       .Services
@@ -143,6 +167,57 @@ public static class DependencyInjection
           .GetRequiredSection(nameof(MasivianOptions))
       )
       .ValidateOnStart();
+
+    builder
+      .Services
+      .AddOptions<QdControlOptions>()
+      .Bind(
+        builder.Configuration
+          .GetRequiredSection(nameof(QdControlOptions))
+      )
+      .ValidateOnStart();
+
+    builder
+      .Services
+      .AddTransient<HttpLoginHandler>();
+
+    builder
+      .Services
+      .AddRefitClient<IMasivianMailClient>()
+      .ConfigureHttpClient((provider, client) =>
+      {
+        MasivianOptions options = provider.GetRequiredService<IOptionsMonitor<MasivianOptions>>().CurrentValue;
+        client.BaseAddress = new Uri(options.EmailBaseUrl);
+        byte[] tokenBytes = IdentityCommons.Encoding.GetBytes($"{options.Username}:{options.Password}");
+        client.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(tokenBytes));
+      })
+      .AddHttpMessageHandler<HttpLoginHandler>();
+
+    builder
+      .Services
+      .AddRefitClient<IMasivianSmsClient>()
+      .ConfigureHttpClient((provider, client) =>
+      {
+        MasivianOptions options = provider.GetRequiredService<IOptionsMonitor<MasivianOptions>>().CurrentValue;
+        client.BaseAddress = new Uri(options.SmsBaseUrl);
+        byte[] tokenBytes = IdentityCommons.Encoding.GetBytes($"{options.Username}:{options.Password}");
+        client.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(tokenBytes));
+      })
+      .AddHttpMessageHandler<HttpLoginHandler>();
+
+    builder
+      .Services
+      .AddRefitClient<IQdControlClient>()
+      .ConfigureHttpClient((provider, client) =>
+      {
+        QdControlOptions options = provider.GetRequiredService<IOptionsMonitor<QdControlOptions>>().CurrentValue;
+        client.BaseAddress = new Uri(options.BaseUrl);
+      })
+      .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+      {
+        ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true
+      })
+      .AddHttpMessageHandler<HttpLoginHandler>();
 
     return builder;
   }
