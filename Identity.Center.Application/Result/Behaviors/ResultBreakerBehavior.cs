@@ -19,14 +19,14 @@ internal sealed class ResultBreakerBehavior<TRequest, TResponse>(IServiceProvide
     Type responseType = typeof(TResponse);
     Type requestType = typeof(TRequest);
     if (!responseType.IsGenericType || responseType.GetGenericTypeDefinition() != typeof(Result<>))
-      return await next(cancellationToken);
+      return await next();
 
     if (
       requestType.GetInterfaces().FirstOrDefault(
         type => type.IsGenericType && new[] { typeof(ICommand<>), typeof(IQuery<>) }.Any(t => t == type.GetGenericTypeDefinition())
       ) is not Type resultRequestType
     )
-      return await next(cancellationToken);
+      return await next();
 
     IEnumerable<DbContext> contexts = _provider.GetServices<DbContext>();
     IEnumerable<IDbContextTransaction> transactions = resultRequestType.GetGenericTypeDefinition() == typeof(ICommand<>)
@@ -54,7 +54,7 @@ internal sealed class ResultBreakerBehavior<TRequest, TResponse>(IServiceProvide
         foreach (DbContext context in contexts)
           context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
 
-      TResponse response = await next(cancellationToken);
+      TResponse response = await next();
 
       await Task.WhenAll(
         transactions.Select(t =>
