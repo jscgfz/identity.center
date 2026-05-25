@@ -1,5 +1,4 @@
-﻿using Identity.Center.Api.Configuration;
-using Identity.Center.Application.Features.Roles.Commands.AddRole;
+﻿using Identity.Center.Application.Features.Roles.Commands.AddRole;
 using Identity.Center.Application.Features.Roles.Dtos;
 using Identity.Center.Application.Result;
 using Identity.Center.Infrastructure.Common;

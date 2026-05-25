@@ -37,7 +37,7 @@ internal sealed class AddRoleCommandHandler(IServiceProvider provider) : IComman
     await _role.AddAsync(role, cancellationToken);
     await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-    foreach(string claim in request.Claims)
+    foreach (string claim in request.Claims)
     {
       ClaimValue? claimValue = await _claim.Data
         .FirstOrDefaultAsync(row => row.Group.Name + ":" + row.Action.Name == claim, cancellationToken);

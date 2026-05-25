@@ -39,7 +39,7 @@ internal sealed class MfaConfigCommandHandler(IServiceProvider provider) : IComm
         new BaseError("Invalid.Token", "Token invalido")
       );
 
-    if(user.MfaSignature == null)
+    if (user.MfaSignature == null)
     {
       user.MfaSignature = KeyGeneration.GenerateRandomKey(32);
       _userRepo.Update(user);

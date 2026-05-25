@@ -41,7 +41,7 @@ public sealed class SelfHostingModule : IIdentityModule
       .BuildRequirementsDoc("Obtiene la configuración del TOTP");
 
     group
-      .MapPost("/auth/mfa", async (ValidateTotpCommand cmd, ISender sender) => 
+      .MapPost("/auth/mfa", async (ValidateTotpCommand cmd, ISender sender) =>
         await sender.Send(cmd).AsHttpResult()
       )
       .Produces<AuthenticationReponseDto>()

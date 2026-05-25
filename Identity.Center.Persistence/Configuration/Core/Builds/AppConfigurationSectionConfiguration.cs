@@ -30,7 +30,7 @@ internal sealed class AppConfigurationSectionConfiguration : IEntityTypeConfigur
       .OnDelete(DeleteBehavior.NoAction);
     builder
       .HasData([
-        new AppConfigurationSection() { 
+        new AppConfigurationSection() {
           AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
           Key = $"{nameof(MasivianOptions)}:{nameof(MasivianOptions.EmailBaseUrl)}",
           Value = "https://api.masiv.masivian.com"

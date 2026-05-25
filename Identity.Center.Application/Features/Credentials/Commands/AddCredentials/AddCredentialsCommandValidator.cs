@@ -1,5 +1,4 @@
-﻿using System.Threading;
-using FluentValidation;
+﻿using FluentValidation;
 using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Domain.Entities.Core.Authentication;
 using Identity.Center.Domain.Entities.Core.Builds;

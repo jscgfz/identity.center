@@ -3,13 +3,11 @@ using System.Security.Claims;
 using Identity.Center.Application.Abstractions.Managers;
 using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Abstractions.Result;
-using Identity.Center.Application.Common;
 using Identity.Center.Application.Features.Authentication.Dtos;
 using Identity.Center.Application.Result;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Identity;
 using Identity.Center.Domain.Enums;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,7 +49,7 @@ internal sealed class ValidateTotpCommandHandler(IServiceProvider provider) : IC
       );
 
     Totp totp = new(user.MfaSignature);
-    if(!totp.VerifyTotp(request.Totp, out _))
+    if (!totp.VerifyTotp(request.Totp, out _))
       return Result.Result.Failure<AuthenticationReponseDto>(
         HttpStatusCode.Unauthorized,
         new BaseError("Invalid.Totp", "Totp invalida")

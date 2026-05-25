@@ -34,7 +34,7 @@ internal sealed class AddCredentialsCommandHandler(IServiceProvider provider) : 
         (c, t) => KeyValuePair.Create(t.Value, c)
       );
 
-    foreach(CredentialRequestDto credential in credentials.Where(row => row.Key == AuthenticationMethods.Single).Select(row => row.Value))
+    foreach (CredentialRequestDto credential in credentials.Where(row => row.Key == AuthenticationMethods.Single).Select(row => row.Value))
     {
       HashCreationResponse hash = await IdentityCommons.NewHash(null);
       SingleCredential singleCredential = new()

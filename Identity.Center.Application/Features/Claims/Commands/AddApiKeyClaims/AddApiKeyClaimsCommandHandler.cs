@@ -18,16 +18,16 @@ internal sealed class AddApiKeyClaimsCommandHandler(IServiceProvider provider) :
   private readonly IIdentityRepository<Group> _groupRepo = provider.GetRequiredService<IIdentityRepository<Group>>();
   private readonly IIdentityRepository<Action> _actionRepo = provider.GetRequiredService<IIdentityRepository<Action>>();
   private readonly IIdentityUnitOfWork _unitOfWork = provider.GetRequiredService<IIdentityUnitOfWork>();
-  
+
   public async Task<Result<RelatedClaimDto>> Handle(AddApiKeyClaimsCommand request, CancellationToken cancellationToken)
   {
     RelatedClaimDto claims = [];
-    foreach(string claim in request.Claims)
+    foreach (string claim in request.Claims)
     {
       ClaimValue? claimValue = await _claimRepo.Data
-        .FirstOrDefaultAsync(row => (row.Group.Name + ":" + row.Action.Name)  == claim, cancellationToken);
+        .FirstOrDefaultAsync(row => (row.Group.Name + ":" + row.Action.Name) == claim, cancellationToken);
 
-      if(claimValue is null)
+      if (claimValue is null)
       {
         KeyValuePair<string, string> pairs = IdentityCommons.Deserialize(claim);
         Guid groupId = await _groupRepo.Data
@@ -47,7 +47,7 @@ internal sealed class AddApiKeyClaimsCommandHandler(IServiceProvider provider) :
         await _unitOfWork.SaveChangesAsync(cancellationToken);
       }
 
-      if(!await _apikeyRepo.Data.AnyAsync(row => row.ApiKeyId == request.SubjectId && row.ClaimId == claimValue.Id, cancellationToken))
+      if (!await _apikeyRepo.Data.AnyAsync(row => row.ApiKeyId == request.SubjectId && row.ClaimId == claimValue.Id, cancellationToken))
       {
         ApiKeyClaim apiKeyClaim = new()
         {

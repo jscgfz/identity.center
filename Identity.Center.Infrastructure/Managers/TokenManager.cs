@@ -1,7 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text.Json;
 using Identity.Center.Application.Abstractions.Managers;
 using Identity.Center.Application.Abstractions.Repositories;
@@ -10,7 +9,6 @@ using Identity.Center.Application.Features.Authentication.Dtos;
 using Identity.Center.Application.Result;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
-using Identity.Center.Domain.Entities.Core.Builds;
 using Identity.Center.Domain.Entities.Core.Identity;
 using Identity.Center.Domain.Entities.Core.Security;
 using Identity.Center.Domain.Enums;
@@ -99,13 +97,13 @@ public sealed class TokenManager(IServiceProvider provider) : ITokenManager
       nameof(domainRoles)
     );
 
-    if(domainCache != null)
+    if (domainCache != null)
     {
       TemporaryValue<IEnumerable<string>> values = JsonSerializer.Deserialize<TemporaryValue<IEnumerable<string>>>(
         domainCache
       )!;
 
-      if(values.ExpiresAtUtc >= DateTimeOffset.UtcNow)
+      if (values.ExpiresAtUtc >= DateTimeOffset.UtcNow)
         domainRoles = values.Value;
 
       await _redis.HashDeleteAsync(
@@ -118,7 +116,7 @@ public sealed class TokenManager(IServiceProvider provider) : ITokenManager
       .AsNoTracking()
       .Include(row => row.App)
       .Where(row => row.AppId == appId)
-      .Where(row => 
+      .Where(row =>
         (!row.ActiveDirectoryMandatory && row.Users.Any(u => u.UserId == userId)) ||
         (domainRoles != null && !string.IsNullOrEmpty(row.DomainName) && domainRoles.Contains(row.DomainName))
       )
@@ -166,11 +164,11 @@ public sealed class TokenManager(IServiceProvider provider) : ITokenManager
     DateTimeOffset refreshExpire = DateTimeOffset.UtcNow.Add(auth.RefreshTime);
 
     JwtSecurityTokenHandler jwtSecurityTokenHandler = new();
-    
+
     string token = jwtSecurityTokenHandler.WriteToken(jwtSecurityToken);
     string refreshToken = Convert.ToBase64String(IdentityCommons.NewHashKey);
 
-    if(domainRoles != null && domainRoles.Any())
+    if (domainRoles != null && domainRoles.Any())
       await _redis.HashSetAsync(
         RedisKeysCommon.SessionHashKey(user.Id),
         nameof(domainRoles),
@@ -247,7 +245,7 @@ public sealed class TokenManager(IServiceProvider provider) : ITokenManager
 
     if (
       !token.Claims.Any(c => c.Type == IdentityClaimTypes.App) ||
-      !token.Claims.Any(c => c.Type == ClaimTypes.NameIdentifier) 
+      !token.Claims.Any(c => c.Type == ClaimTypes.NameIdentifier)
     )
       return Result.Failure<string>(
         HttpStatusCode.Forbidden,
@@ -268,13 +266,13 @@ public sealed class TokenManager(IServiceProvider provider) : ITokenManager
       ) ?? string.Empty
     )!;
 
-    if(sessionValues.ExpiresAtUtc < DateTime.UtcNow)
+    if (sessionValues.ExpiresAtUtc < DateTime.UtcNow)
       return Result.Failure<string>(
         HttpStatusCode.Forbidden,
         new BaseError("Session.Expired", "Sesión expirada")
       );
 
-    if(sessionValues.Value.SessionId != Guid.Parse(sid) || sessionValues.Value.RefreshToken != refreshToken)
+    if (sessionValues.Value.SessionId != Guid.Parse(sid) || sessionValues.Value.RefreshToken != refreshToken)
       return Result.Failure<string>(
         HttpStatusCode.Forbidden,
         new BaseError("Session.Expired", "Se ha iniciado sesión desde otro dispositivo")

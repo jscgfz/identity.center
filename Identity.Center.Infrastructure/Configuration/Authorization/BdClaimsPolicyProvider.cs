@@ -10,7 +10,7 @@ internal sealed class BdClaimsPolicyProvider(IOptions<AuthorizationOptions> opti
   public override async Task<AuthorizationPolicy?> GetPolicyAsync(string policyName)
   {
     AuthorizationPolicy? policy = await base.GetPolicyAsync(policyName);
-    if(policy == null && IdentityCommons.ValidatePolicyFromClaim(policyName, out string? claim))
+    if (policy == null && IdentityCommons.ValidatePolicyFromClaim(policyName, out string? claim))
       policy = new AuthorizationPolicyBuilder()
         .RequireClaim(IdentityClaimTypes.Caim, claim)
         .Build();

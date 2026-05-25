@@ -3,7 +3,7 @@
 namespace Identity.Center.Application.Common.Authentication.Models;
 
 public sealed record LdapAuthenticationResponse(
-  [property: JsonPropertyName("mensaje")]  LdapAuthenticationMessage Message,
+  [property: JsonPropertyName("mensaje")] LdapAuthenticationMessage Message,
   IEnumerable<LdapAuthenticationRole> Roles
 );
 

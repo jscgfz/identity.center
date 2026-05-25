@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using FluentValidation;
 using Identity.Center.Application.Abstractions.Repositories;
 using Identity.Center.Application.Result;

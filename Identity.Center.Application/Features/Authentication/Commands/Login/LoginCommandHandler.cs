@@ -13,7 +13,6 @@ using Identity.Center.Domain.Common.Models.Cryptography;
 using Identity.Center.Domain.Entities.Core.Authentication;
 using Identity.Center.Domain.Entities.Core.Builds;
 using Identity.Center.Domain.Enums;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

@@ -40,7 +40,7 @@ internal class JwtOptionsConfigurer(IServiceProvider provider) : IConfigureNamed
     {
       OnMessageReceived = context =>
       {
-        if(context.Request.Query.TryGetValue("access_token", out StringValues accesToken))
+        if (context.Request.Query.TryGetValue("access_token", out StringValues accesToken))
           context.Token = accesToken.Single();
         if (context.Request.Cookies.TryGetValue("accesToken", out string? cookieToken))
           context.Token = cookieToken;
@@ -48,7 +48,7 @@ internal class JwtOptionsConfigurer(IServiceProvider provider) : IConfigureNamed
       },
       OnAuthenticationFailed = async context =>
       {
-        if(context.Exception is SecurityTokenExpiredException)
+        if (context.Exception is SecurityTokenExpiredException)
         {
           Result<string> refresh = await context.HttpContext.RequestServices.GetRequiredService<ITokenManager>()
             .RefreshToken(context.HttpContext.RequestAborted);

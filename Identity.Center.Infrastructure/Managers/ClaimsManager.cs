@@ -6,7 +6,6 @@ using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Authentication;
 using Identity.Center.Domain.Entities.Core.Authorization;
-using Identity.Center.Domain.Enums;
 using Identity.Center.Persistence.Data.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

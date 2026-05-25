@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using Identity.Center.Application.Abstractions.Repositories;
@@ -9,8 +8,6 @@ using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Builds;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Center.Application.Features.SelfHosting.Queries.GetConfig;
@@ -36,7 +33,7 @@ internal sealed class GetConfigQueryHandler(IServiceProvider provider) : IQueryH
       .Where(row => row.AppId == appId)
       .ToListAsync(cancellationToken);
 
-    if(!configurationSections.Any())
+    if (!configurationSections.Any())
       return Result.Result.Failure<JsonElement>(
         HttpStatusCode.NotFound,
         new BaseError("Config.NotFound", "No se encontro configuración para la aplicación")

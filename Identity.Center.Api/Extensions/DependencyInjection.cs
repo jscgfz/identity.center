@@ -10,12 +10,11 @@ using Identity.Center.Application.Common.Options;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Infrastructure.Configuration.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc.Cors;
-using Microsoft.AspNetCore.OpenApi; 
+using Microsoft.AspNetCore.OpenApi;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using OpenTelemetry.Resources;
@@ -94,7 +93,7 @@ public static class DependencyInjection
           .GetSection(nameof(EnvironmentOptions))
           .Get<EnvironmentOptions>();
 
-    if(envOptions != null && envOptions.IsDevEnvironment(builder.Environment))
+    if (envOptions != null && envOptions.IsDevEnvironment(builder.Environment))
       _ = documentName switch
       {
         null => builder.Services.AddOpenApi(_options),
@@ -134,7 +133,7 @@ public static class DependencyInjection
     EnvironmentOptions? envOptions = app.Configuration
           .GetSection(nameof(EnvironmentOptions))
           .Get<EnvironmentOptions>();
-    if(envOptions != null && envOptions.IsDevEnvironment(app.Environment))
+    if (envOptions != null && envOptions.IsDevEnvironment(app.Environment))
       app.MapOpenApi("/openapi/{documentName}/openapidoc.json");
 
     return app;
@@ -150,7 +149,7 @@ public static class DependencyInjection
           .GetSection(nameof(EnvironmentOptions))
           .Get<EnvironmentOptions>();
 
-    if(envOptions != null && envOptions.IsDevEnvironment(app.Environment))
+    if (envOptions != null && envOptions.IsDevEnvironment(app.Environment))
       app.UseSwaggerUI(options =>
       {
         IEnumerable<ApiVersionDescription> versions = app.DescribeApiVersions();
@@ -306,7 +305,7 @@ public static class DependencyInjection
         authMatrix.AppendLine($"  - {description}");
         authMatrix.AppendLine();
       }
-      if(options.Metadata.OfType<AuthorizeAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.Policy)).Any())
+      if (options.Metadata.OfType<AuthorizeAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.Policy)).Any())
       {
         authMatrix.AppendLine("**Politicas**");
         foreach (AuthorizeAttribute attr in options.Metadata.OfType<AuthorizeAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.Policy)))
@@ -315,7 +314,7 @@ public static class DependencyInjection
           authMatrix.AppendLine($" - {name}");
         }
       }
-      if(authMatrix.Length > 0)
+      if (authMatrix.Length > 0)
         options.Metadata.Add(new EndpointDescriptionAttribute(authMatrix.ToString()));
     });
     return builder;

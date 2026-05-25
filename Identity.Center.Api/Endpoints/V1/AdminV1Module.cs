@@ -1,8 +1,5 @@
-﻿using Identity.Center.Api.Configuration;
-using Identity.Center.Api.Extensions;
-using Identity.Center.Application.Abstractions.Common;
+﻿using Identity.Center.Application.Abstractions.Common;
 using Identity.Center.Application.Features.ApiKeys.Commands.AddApiKey;
-using Identity.Center.Application.Features.ApiKeys.Dtos;
 using Identity.Center.Application.Features.ApiKeys.Queries.GetAdminApiKey;
 using Identity.Center.Application.Features.ApiKeys.Queries.GetAdminApiKeys;
 using Identity.Center.Application.Features.Apps.Commands.AddApp;
@@ -17,7 +14,6 @@ using Identity.Center.Application.Features.Claims.Dtos;
 using Identity.Center.Application.Features.Claims.Queries.GetActions;
 using Identity.Center.Application.Features.Claims.Queries.GetGroups;
 using Identity.Center.Application.Result;
-using Identity.Center.Domain.Enums;
 using Identity.Center.Infrastructure.Common;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

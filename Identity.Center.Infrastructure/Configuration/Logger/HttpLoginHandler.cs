@@ -15,7 +15,7 @@ internal sealed class HttpLoginHandler(IServiceProvider provider) : DelegatingHa
     using (_logger.BeginScope("httpExecution"))
     {
       using MemoryStream stream = new();
-      
+
       if (request.Content != null)
       {
         await request.Content.LoadIntoBufferAsync(cancellationToken);

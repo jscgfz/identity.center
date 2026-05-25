@@ -31,7 +31,7 @@ public static class DependencyInjection
             sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
           }
         );
-        if(envOptions != null && envOptions.IsDevEnvironment(ref provider))
+        if (envOptions != null && envOptions.IsDevEnvironment(ref provider))
         {
           options.EnableDetailedErrors();
           options.EnableSensitiveDataLogging();

@@ -9,7 +9,6 @@ using Identity.Center.Application.Result;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Identity;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Identity.Center.Application.Features.SelfHosting.Queries.GetOwnUsers;

@@ -1,7 +1,4 @@
-﻿using Identity.Center.Api.Configuration;
-using Identity.Center.Api.Extensions;
-using Identity.Center.Application.Abstractions.Common;
-using Identity.Center.Application.Features.Credentials.Commands.AddCredentials;
+﻿using Identity.Center.Application.Features.Credentials.Commands.AddCredentials;
 using Identity.Center.Application.Features.Users.Commands.AddUser;
 using Identity.Center.Application.Features.Users.Dtos;
 using Identity.Center.Application.Features.Users.Queries.GetUsers;

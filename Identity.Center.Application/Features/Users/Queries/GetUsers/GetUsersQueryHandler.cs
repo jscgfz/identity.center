@@ -20,7 +20,7 @@ internal sealed class GetUsersQueryHandler(IServiceProvider provider) : IQueryHa
 
   public async Task<Result<IPaginatedResult<BasicUserInfoDto>>> Handle(GetUsersQuery request, CancellationToken cancellationToken)
     => await _http.RetrieveAppContext(cancellationToken)
-      .Bind(resp => Process(resp, request ,cancellationToken));
+      .Bind(resp => Process(resp, request, cancellationToken));
 
   private async Task<Result<IPaginatedResult<BasicUserInfoDto>>> Process(Guid appId, GetUsersQuery request, CancellationToken cancellationToken = default)
   {
