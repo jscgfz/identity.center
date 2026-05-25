@@ -26,7 +26,7 @@ internal sealed class DbClaimsInjectionTransformation(IServiceProvider provider)
         )
           return principal;
 
-        claims = await _claimsManager.ByRole(identifier);
+        claims = await _claimsManager.ByRole(roleGuid);
       }
       else if (await _context.Set<ApiKey>().AnyAsync(row => row.Id == identifier))
         claims = await _claimsManager.ByApkiKey(identifier);
