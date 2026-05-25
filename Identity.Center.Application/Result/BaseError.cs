@@ -2,11 +2,11 @@
 
 namespace Identity.Center.Application.Result;
 
-public record BaseError(
+public sealed record BaseError(
   string Name,
   string Description
 ) : IError
 {
-  public KeyValuePair<string, string> Seralize()
-    => KeyValuePair.Create(Name, Description);
+  public KeyValuePair<string, object?> Seralize()
+    => KeyValuePair.Create<string, object?>(Name, Description);
 }
