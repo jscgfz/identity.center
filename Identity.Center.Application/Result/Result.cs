@@ -103,6 +103,7 @@ public static class Result
       return result.Value switch
       {
         ICreatedResponse created => Results.Created(default(string), created),
+        IFileResponse file => RenderFile(file),
         Unit unit => Results.NoContent(),
         _ => Results.Ok(result.Value)
       };
@@ -120,6 +121,17 @@ public static class Result
           .GroupBy(e => e.Key)
           .ToDictionary(e => e.Key, e => e.Select(i => i.Value))
       }
+    );
+  }
+
+  private static IResult RenderFile<TFile>(TFile file)
+    where TFile : IFileResponse
+  {
+    FileContentResponse content = file.Render();
+    return Results.File(
+      content.Content,
+      content.MimeType,
+      content.Name
     );
   }
 
