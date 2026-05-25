@@ -3,32 +3,40 @@ using System.Reflection;
 using System.Text;
 using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
+using Destructurama;
 using Identity.Center.Api.Configuration;
-using Identity.Center.Api.Configuration.Authorization;
 using Identity.Center.Api.Configuration.Endpoints;
+using Identity.Center.Application.Common.Options;
+using Identity.Center.Domain.Common;
+using Identity.Center.Domain.Constants;
 using Identity.Center.Infrastructure.Configuration.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.OpenApi;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Cors;
+using Microsoft.AspNetCore.OpenApi; 
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Serilog;
 
 namespace Identity.Center.Api.Extensions;
 
 public static class DependencyInjection
 {
-  public static TBuilder WithIdentityAuthorization<TBuilder>(this TBuilder builder, IdentityPolicyBuilder policyBuilder)
-    where TBuilder : IEndpointConventionBuilder
-  {
-    policyBuilder.Apply(builder);
-    builder
-      .ProducesProblem(StatusCodes.Status401Unauthorized)
-      .ProducesProblem(StatusCodes.Status403Forbidden);
-    return builder;
-  }
   private static Action<OpenApiOptions> _options => options =>
   {
     options.AddDocumentTransformer((doc, context, cancellationToken) =>
     {
+      if (
+        context.ApplicationServices
+          .GetRequiredService<IConfiguration>()
+          .GetSection(nameof(doc.Servers)).Get<IEnumerable<OpenApiServer>>() is IList<OpenApiServer> servers
+      )
+        doc.Servers = servers;
+
       doc.Info = new()
       {
         Title = "Identity Center Services",
@@ -42,18 +50,6 @@ public static class DependencyInjection
       doc.Components ??= new();
       doc.Components.SecuritySchemes = new Dictionary<string, OpenApiSecurityScheme>()
       {
-        {
-          JwtBearerDefaults.AuthenticationScheme,
-          new()
-          {
-            In = ParameterLocation.Header,
-            Type = SecuritySchemeType.Http,
-            BearerFormat = "JWT",
-            Name = JwtBearerDefaults.AuthenticationScheme,
-            Scheme = JwtBearerDefaults.AuthenticationScheme,
-            Description = "Ingreso con Json Web Token"
-          }
-        },
         {
           $"{ApiKeySchemeOptions.DefaultScheme} Subject".ToLower(),
           new()
@@ -80,11 +76,6 @@ public static class DependencyInjection
 
       doc.SecurityRequirements.Add(new()
       {
-        { new() { Reference = new() { Id = JwtBearerDefaults.AuthenticationScheme, Type = ReferenceType.SecurityScheme } }, [] }
-      });
-
-      doc.SecurityRequirements.Add(new()
-      {
         { new() { Reference = new() { Id = $"{ApiKeySchemeOptions.DefaultScheme} Subject".ToLower(), Type = ReferenceType.SecurityScheme } }, [] },
         { new() { Reference = new() { Id = ApiKeySchemeOptions.DefaultScheme, Type = ReferenceType.SecurityScheme } }, [] }
       });
@@ -99,19 +90,16 @@ public static class DependencyInjection
       .Services
       .AddEndpointsApiExplorer();
 
-    //builder
-    //  .WebHost
-    //  .ConfigureKestrel(options =>
-    //  {
-    //    options.Limits.MaxRequestBodySize = null;
-    //    options.Limits.MinResponseDataRate = null;
-    //  });
+    EnvironmentOptions? envOptions = builder.Configuration
+          .GetSection(nameof(EnvironmentOptions))
+          .Get<EnvironmentOptions>();
 
-    _ = documentName switch
-    {
-      null => builder.Services.AddOpenApi(_options),
-      _ => builder.Services.AddOpenApi(documentName, _options)
-    };
+    if(envOptions != null && envOptions.IsDevEnvironment(builder.Environment))
+      _ = documentName switch
+      {
+        null => builder.Services.AddOpenApi(_options),
+        _ => builder.Services.AddOpenApi(documentName, _options)
+      };
 
     return builder;
   }
@@ -143,7 +131,12 @@ public static class DependencyInjection
 
   public static WebApplication WithOpenApiDocumentation(this WebApplication app)
   {
-    app.MapOpenApi("/openapi/{documentName}/openapidoc.json");
+    EnvironmentOptions? envOptions = app.Configuration
+          .GetSection(nameof(EnvironmentOptions))
+          .Get<EnvironmentOptions>();
+    if(envOptions != null && envOptions.IsDevEnvironment(app.Environment))
+      app.MapOpenApi("/openapi/{documentName}/openapidoc.json");
+
     return app;
   }
 
@@ -153,20 +146,26 @@ public static class DependencyInjection
 
   public static WebApplication WithSwagger(this WebApplication app)
   {
-    app.UseSwaggerUI(options =>
-    {
-      IEnumerable<ApiVersionDescription> versions = app.DescribeApiVersions();
-      foreach (ApiVersionDescription version in versions)
-        options.SwaggerEndpoint($"/openapi/{version.GroupName}/openapidoc.json", version.GroupName);
-      options.RoutePrefix = "reference";
-      options.DocumentTitle = "identity-center-services";
-      options.DisplayRequestDuration();
-      options.DisplayOperationId();
-      options.EnableDeepLinking();
-      options.EnableFilter();
-      options.HeadContent = "<link rel='icon' type='image/ico' href='https://www.finanzauto.com.co/portal/icon.ico' sizes='32x32' />";
-      options.ConfigObject.AdditionalItems["cdn_url"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/";
-    });
+    EnvironmentOptions? envOptions = app.Configuration
+          .GetSection(nameof(EnvironmentOptions))
+          .Get<EnvironmentOptions>();
+
+    if(envOptions != null && envOptions.IsDevEnvironment(app.Environment))
+      app.UseSwaggerUI(options =>
+      {
+        IEnumerable<ApiVersionDescription> versions = app.DescribeApiVersions();
+        foreach (ApiVersionDescription version in versions)
+          options.SwaggerEndpoint($"/openapi/{version.GroupName}/openapidoc.json", version.GroupName);
+        options.RoutePrefix = "reference";
+        options.DocumentTitle = "identity-center-services";
+        options.DisplayRequestDuration();
+        options.DisplayOperationId();
+        options.EnableDeepLinking();
+        options.EnableFilter();
+        options.HeadContent = "<link rel='icon' type='image/ico' href='https://www.finanzauto.com.co/portal/icon.ico' sizes='32x32' />";
+        options.HeadContent += "<style>html.dark-mode .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {\r\n    color: #bdc6dd;\r\n}</style>";
+        options.ConfigObject.AdditionalItems["cdn_url"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/";
+      });
     return app;
   }
 
@@ -186,10 +185,21 @@ public static class DependencyInjection
       .Services
       .AddHttpContextAccessor();
 
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+      options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+      options.KnownProxies.Clear();
+      options.KnownNetworks.Clear();
+    });
+
     builder
       .Services
       .AddProblemDetails(options =>
       {
+        EnvironmentOptions? envOptions = builder.Configuration
+          .GetSection(nameof(EnvironmentOptions))
+          .Get<EnvironmentOptions>();
+
         options.CustomizeProblemDetails = context =>
         {
           context.ProblemDetails.Instance = context.HttpContext.Request.Path;
@@ -198,7 +208,7 @@ public static class DependencyInjection
           context.ProblemDetails.Extensions.TryAdd("requestId", context.HttpContext.TraceIdentifier);
           Activity? activity = context.HttpContext.Features.Get<IHttpActivityFeature>()?.Activity;
           context.ProblemDetails.Extensions.TryAdd("requestId", activity?.Id);
-          if (context.Exception is Exception ex)
+          if (context.Exception is Exception ex && envOptions != null && envOptions.IsDevEnvironment(builder.Environment))
           {
             context.ProblemDetails.Detail = ex.Message;
             context.ProblemDetails.Type = ex.HelpLink;
@@ -253,6 +263,121 @@ public static class DependencyInjection
         b.Metadata.Add(new EndpointDescriptionAttribute(data));
 
     });
+    return builder;
+  }
+
+  public static WebApplication WithNotificationTemplatesBrowser(this WebApplication app)
+  {
+    if (app.Environment.IsDevelopment())
+    {
+      app.UseDirectoryBrowser(
+        new DirectoryBrowserOptions()
+        {
+          RequestPath = "/notifications/templates",
+          FileProvider = new PhysicalFileProvider(
+            Path.Combine(app.Environment.ContentRootPath, "Templates", "Notifications")
+          )
+        }
+      );
+
+      app.UseStaticFiles(
+        new StaticFileOptions()
+        {
+          RequestPath = "/notifications/templates",
+          FileProvider = new PhysicalFileProvider(
+            Path.Combine(app.Environment.ContentRootPath, "Templates", "Notifications")
+          )
+        }
+      );
+    }
+    return app;
+  }
+
+  public static TBuilder BuildRequirementsDoc<TBuilder>(this TBuilder builder, string? description = null)
+    where TBuilder : IEndpointConventionBuilder
+  {
+    builder.Add(options =>
+    {
+      StringBuilder authMatrix = new();
+      if (!string.IsNullOrWhiteSpace(description))
+      {
+        options.Metadata.Add(new EndpointSummaryAttribute(description));
+        authMatrix.AppendLine("**Descripción**");
+        authMatrix.AppendLine($"  - {description}");
+        authMatrix.AppendLine();
+      }
+      if(options.Metadata.OfType<AuthorizeAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.Policy)).Any())
+      {
+        authMatrix.AppendLine("**Politicas**");
+        foreach (AuthorizeAttribute attr in options.Metadata.OfType<AuthorizeAttribute>().Where(a => !string.IsNullOrWhiteSpace(a.Policy)))
+        {
+          string name = IdentityCommons.ValidatePolicyFromClaim(attr.Policy!, out string? claim) ? $"{IdentityClaimTypes.Caim} - {claim}" : attr.Policy!.ToLower();
+          authMatrix.AppendLine($" - {name}");
+        }
+      }
+      if(authMatrix.Length > 0)
+        options.Metadata.Add(new EndpointDescriptionAttribute(authMatrix.ToString()));
+    });
+    return builder;
+  }
+
+  public static WebApplicationBuilder WithCors(this WebApplicationBuilder builder)
+  {
+    builder
+      .Services
+      .AddCors(options =>
+      {
+        options
+          .AddDefaultPolicy(policy =>
+          {
+            policy
+              .WithOrigins([.. (builder.Configuration.GetSection(nameof(CorsAuthorizationFilter)).Get<IEnumerable<string>>() ?? [])])
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+          });
+      });
+
+    return builder;
+  }
+
+  public static WebApplicationBuilder WithLoggin(this WebApplicationBuilder builder)
+  {
+    builder
+      .Services
+      .AddSerilog((provider, options) =>
+      {
+        options
+          .Destructure
+          .SystemTextJsonTypes()
+          .ReadFrom
+          .Configuration(provider.GetRequiredService<IConfiguration>());
+      });
+
+
+
+    builder
+      .Services
+      .AddOpenTelemetry()
+      .ConfigureResource(resource =>
+      {
+        resource
+          .AddService("identity", new Version(1, 0, 1, 0).ToString());
+      })
+      .WithTracing(tracing =>
+      {
+        tracing
+          .AddSource("identity")
+          .AddAspNetCoreInstrumentation(options =>
+          {
+            options.RecordException = true;
+          })
+          .AddHttpClientInstrumentation(options =>
+          {
+            options.RecordException = true;
+          })
+          .AddEntityFrameworkCoreInstrumentation();
+      });
+
     return builder;
   }
 }
