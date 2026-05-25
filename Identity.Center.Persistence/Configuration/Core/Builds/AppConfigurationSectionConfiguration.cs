@@ -74,6 +74,11 @@ internal sealed class AppConfigurationSectionConfiguration : IEntityTypeConfigur
           AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
           Key = $"{nameof(SmtpOptions)}:{nameof(SmtpOptions.Password)}",
           Value = "vijsrsgsowdgizkc"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(QdControlOptions)}:{nameof(QdControlOptions.BaseUrl)}",
+          Value = "http://www.qdatacolombia.com/Services/ServiciosApi/ServiceAutenticacionLDAP"
         }
       ]);
   }
