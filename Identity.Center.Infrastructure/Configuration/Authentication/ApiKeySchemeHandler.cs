@@ -1,9 +1,12 @@
-﻿using System.Security.Claims;
+﻿using System.Net;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Common.Models.Cryptography;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Domain.Entities.Core.Authentication;
+using Identity.Center.Domain.Entities.Core.Security;
+using Identity.Center.Domain.Enums;
 using Identity.Center.Persistence.Data.Core;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -64,8 +67,7 @@ public sealed class ApiKeySchemeHandler(
         apiKey,
         dbApikey.Hash,
         dbApikey.Salt
-      ),
-      cancellationToken
+      )
     );
 
     if (!hashValidation.Success)
@@ -75,9 +77,38 @@ public sealed class ApiKeySchemeHandler(
         )
       );
 
+    IEnumerable<string> parsedOrigins = string.Join(
+      ',',
+      Request.Headers["X-Forwarded-For"].ToString(),
+      Request.Headers["X-Real-IP"].ToString()
+    )
+      .Split(',')
+      .SelectMany(ip =>
+      {
+        IPAddress addr = IPAddress.Parse(ip);
+        return new[] { addr.MapToIPv4().ToString(), addr.MapToIPv6().ToString() };
+      })
+      .Distinct();
+
+
+    if (!parsedOrigins.Any())
+      return AuthenticateResult.Fail(
+        new UnauthorizedAccessException(
+          "Invalid ApiKey"
+        )
+      );
+
+    if (!await context.Set<AllowedOrigin>().AnyAsync(row => parsedOrigins.Contains(row.Origin)))
+      return AuthenticateResult.Fail(
+        new UnauthorizedAccessException(
+          $"Invalid Origin {string.Join(", ", parsedOrigins)}"
+        )
+      );
+
     IEnumerable<Claim> initialClaims = [
       new Claim(ClaimTypes.NameIdentifier, subjectId.ToString("N")),
       new Claim(IdentityClaimTypes.App, dbApikey.AppId.ToString("N")),
+      new Claim(IdentityClaimTypes.Mfa, IdentityCommons.Serialize(MfaStates.NotRequired)),
     ];
 
     ClaimsIdentity identity = new(initialClaims, nameof(ApiKeySchemeHandler));
