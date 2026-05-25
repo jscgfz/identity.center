@@ -37,6 +37,7 @@ internal static class DbContextExtensions
   private static ModelBuilder WithSecSchema(this ModelBuilder modelBuilder)
     => modelBuilder
       .ApplyConfiguration(new ActionConfiguration())
+      .ApplyConfiguration(new AllowedOriginsConfiguration())
       .ApplyConfiguration(new AppAuthConfiguration())
       .ApplyConfiguration(new ContactTypeConfiguration())
       .ApplyConfiguration(new GroupConfiguration());

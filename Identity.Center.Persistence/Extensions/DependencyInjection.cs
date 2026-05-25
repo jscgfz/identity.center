@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Identity.Center.Application.Common.Options;
 using Identity.Center.Domain.Constants;
 using Identity.Center.Persistence.Data.Core;
 using Microsoft.AspNetCore.Builder;
@@ -16,6 +17,10 @@ public static class DependencyInjection
       .Services
       .AddPooledDbContextFactory<IdentityContext>((provider, options) =>
       {
+        EnvironmentOptions? envOptions = provider.GetRequiredService<IConfiguration>()
+          .GetSection(nameof(EnvironmentOptions))
+          .Get<EnvironmentOptions>();
+
         options.UseSqlServer(
           provider.GetRequiredService<IConfiguration>().GetConnectionString(nameof(IdentityContext)),
           sql =>
@@ -26,8 +31,11 @@ public static class DependencyInjection
             sql.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
           }
         );
-        options.EnableDetailedErrors();
-        options.EnableSensitiveDataLogging();
+        if(envOptions != null && envOptions.IsDevEnvironment(ref provider))
+        {
+          options.EnableDetailedErrors();
+          options.EnableSensitiveDataLogging();
+        }
         options.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
       });
 

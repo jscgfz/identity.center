@@ -4,6 +4,7 @@ using Identity.Center.Persistence.Data.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Center.Persistence.Data.Core.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    partial class IdentityContextModelSnapshot : ModelSnapshot
+    [Migration("20260519154325_QdOptions")]
+    partial class QdOptions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1753,66 +1756,6 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AllowedOrigin", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("id")
-                        .HasColumnOrder(0)
-                        .HasDefaultValueSql("newsequentialid()");
-
-                    b.Property<Guid>("ApiKeyId")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("api_key_id");
-
-                    b.Property<DateTimeOffset>("CreatedAtUtc")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("created_at_utc")
-                        .HasDefaultValueSql("getutcdate()");
-
-                    b.Property<Guid>("CreatedBy")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
-                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"))
-                        .HasColumnName("created_by");
-
-                    b.Property<DateTimeOffset?>("DeletedAtUtc")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("deleted_at_utc");
-
-                    b.Property<Guid?>("DeletedBy")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("deleted_by");
-
-                    b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false)
-                        .HasColumnName("deleted");
-
-                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
-                        .HasColumnType("datetimeoffset")
-                        .HasColumnName("last_modified_at_utc");
-
-                    b.Property<Guid?>("LastModifiedBy")
-                        .HasColumnType("uniqueidentifier")
-                        .HasColumnName("last_modified_by");
-
-                    b.Property<string>("Origin")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)")
-                        .HasColumnName("origin");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiKeyId", "Origin")
-                        .IsUnique();
-
-                    b.ToTable("allowed_origins", "sec");
-                });
-
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AppAuth", b =>
                 {
                     b.Property<Guid>("AppId")
@@ -2424,17 +2367,6 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("App");
                 });
 
-            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AllowedOrigin", b =>
-                {
-                    b.HasOne("Identity.Center.Domain.Entities.Core.Authentication.ApiKey", "ApiKey")
-                        .WithMany("AllowedOrigins")
-                        .HasForeignKey("ApiKeyId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("ApiKey");
-                });
-
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AppAuth", b =>
                 {
                     b.HasOne("Identity.Center.Domain.Entities.Core.Builds.App", "App")
@@ -2448,8 +2380,6 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authentication.ApiKey", b =>
                 {
-                    b.Navigation("AllowedOrigins");
-
                     b.Navigation("Claims");
                 });
 
