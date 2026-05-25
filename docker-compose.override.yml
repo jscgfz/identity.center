@@ -5,15 +5,32 @@ services:
       - ASPNETCORE_HTTP_PORTS=${ASPNETCORE_HTTP_PORTS}
       - ASPNETCORE_URLS=${ASPNETCORE_URLS}
       - ConnectionStrings:IRedis=identity.center.redis:6379,password=${REDIS_PASSWORD},abortConnect=false,connectTimeout=5000,syncTimeout=5000
+
       - BrokerOptions:Host=identity.center.broker
       - BrokerOptions:Username=${RABBITMQ_DEFAULT_USER}
       - BrokerOptions:Password=${RABBITMQ_DEFAULT_PASS}
       - BrokerOptions:VirtualHost=/
       - BrokerOptions:Exchange=comms.exchange
       - ConnectionStrings:IdentityContext=${ASPNETCORE_APPCONNECTIONSTRING}
-      - WithConfigurationContext:Id=${IDENTITY_MAINAPP_ID}
+      - IdentityConfigurationProvider:Id=${IDENTITY_MAINAPP_ID}
+
+      # comentar los ambientes para los que no se quiera generar documentacion ni stack traces (requerido para seguridad)
+      - EnvironmentOptions:DevEnvironments:0=Development
+      - EnvironmentOptions:DevEnvironments:1=Quality
+      # - EnvironmentOptions:DevEnvironments:2=Production
+
+      - Servers:0:Url=${Servers0Url}
+      - Servers:0:Description=${Servers0Description}
+      - Servers:1:Url=${Servers1Url}
+      - Servers:1:Description=${Servers1Description}
+      - Servers:2:Url=${Servers2Url}
+      - Servers:2:Description=${Servers2Description}
+
+      - CorsAuthorizationFilter:0=*
     ports:
       - "56676:8080"
+    depends_on:
+      - identity.center.redis
   identity.center.redis:
     expose:
       - 6379
@@ -32,6 +49,11 @@ services:
       --lazyfree-lazy-expire yes
       --active-defrag-threshold-lower 10
       --active-defrag-threshold-upper 100
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   identity.center.broker:
     expose:
       - 5672
