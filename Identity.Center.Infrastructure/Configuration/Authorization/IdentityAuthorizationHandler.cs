@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
+using Identity.Center.Application.Result;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
@@ -68,6 +69,15 @@ internal sealed class IdentityAuthorizationHandler : IAuthorizationMiddlewareRes
       problemDetails.Extensions.TryAdd("requestId", context.TraceIdentifier);
       Activity? activity = context.Features.Get<IHttpActivityFeature>()?.Activity;
       problemDetails.Extensions.TryAdd("requestId", activity?.Id);
+      if (context.Items.Any(i => i.Key is string key && key.StartsWith($"{nameof(Result)}:")))
+      {
+        problemDetails.Extensions["failedRequirements"] = context.Items
+          .Where(i => i.Key is string key && key.StartsWith($"{nameof(Result)}:"))
+          .ToDictionary();
+
+        foreach (KeyValuePair<object, object?> pair in context.Items.Where(i => i.Key is string key && key.StartsWith($"{nameof(Result)}:")))
+          context.Items.Remove(pair.Key);
+      }
 
       await context.Response.WriteAsJsonAsync(problemDetails);
 
