@@ -36,7 +36,7 @@ internal sealed class AddCredentialsCommandHandler(IServiceProvider provider) : 
 
     foreach(CredentialRequestDto credential in credentials.Where(row => row.Key == AuthenticationMethods.Single).Select(row => row.Value))
     {
-      HashCreationResponse hash = await IdentityCommons.NewHash(null, cancellationToken);
+      HashCreationResponse hash = await IdentityCommons.NewHash(null);
       SingleCredential singleCredential = new()
       {
         AppId = credential.AppId!.Value,
