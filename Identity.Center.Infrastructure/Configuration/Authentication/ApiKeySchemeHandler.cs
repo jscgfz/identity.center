@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using Identity.Center.Application.Common.Options;
 using Identity.Center.Domain.Common;
 using Identity.Center.Domain.Common.Models.Cryptography;
 using Identity.Center.Domain.Constants;
@@ -9,7 +10,9 @@ using Identity.Center.Domain.Entities.Core.Security;
 using Identity.Center.Domain.Enums;
 using Identity.Center.Persistence.Data.Core;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -20,9 +23,14 @@ namespace Identity.Center.Infrastructure.Configuration.Authentication;
 public sealed class ApiKeySchemeHandler(
   IOptionsMonitor<ApiKeySchemeOptions> option,
   ILoggerFactory logger,
-  UrlEncoder encoder
+  UrlEncoder encoder,
+  IConfiguration config,
+  IWebHostEnvironment env
 ) : AuthenticationHandler<ApiKeySchemeOptions>(option, logger, encoder)
 {
+  private readonly IConfiguration _configuration = config;
+  private readonly IWebHostEnvironment _env = env;
+
   protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
   {
     IdentityContext context = Request.HttpContext.RequestServices.GetRequiredService<IdentityContext>();
@@ -77,33 +85,42 @@ public sealed class ApiKeySchemeHandler(
         )
       );
 
-    IEnumerable<string> parsedOrigins = string.Join(
-      ',',
-      Request.Headers["X-Forwarded-For"].ToString(),
-      Request.Headers["X-Real-IP"].ToString()
+    if(
+      _configuration.GetSection(nameof(EnvironmentOptions)).Get<EnvironmentOptions>() is EnvironmentOptions env &&
+      !env.IsDevEnvironment(_env)
     )
-      .Split(',')
-      .SelectMany(ip =>
-      {
-        IPAddress addr = IPAddress.Parse(ip);
-        return new[] { addr.MapToIPv4().ToString(), addr.MapToIPv6().ToString() };
-      })
-      .Distinct();
+    {
+      IEnumerable<string> parsedOrigins = string.Join(
+        ',',
+        Request.Headers["X-Forwarded-For"].ToString(),
+        Request.Headers["X-Real-IP"].ToString(),
+        Request.HttpContext.Connection.RemoteIpAddress?.MapToIPv4().ToString() ?? string.Empty
+      )
+        .Split(',')
+        .Where(ip => !string.IsNullOrWhiteSpace(ip))
+        .SelectMany(ip =>
+        {
+          IPAddress addr = IPAddress.Parse(ip);
+          return new[] { addr.MapToIPv4().ToString(), addr.MapToIPv6().ToString() };
+        })
+        .Distinct();
 
 
-    if (!parsedOrigins.Any())
-      return AuthenticateResult.Fail(
-        new UnauthorizedAccessException(
-          "Invalid ApiKey"
-        )
-      );
+      if (!parsedOrigins.Any())
+        return AuthenticateResult.Fail(
+          new UnauthorizedAccessException(
+            "Invalid ApiKey"
+          )
+        );
 
-    if (!await context.Set<AllowedOrigin>().AnyAsync(row => parsedOrigins.Contains(row.Origin)))
-      return AuthenticateResult.Fail(
-        new UnauthorizedAccessException(
-          $"Invalid Origin {string.Join(", ", parsedOrigins)}"
-        )
-      );
+      if (!await context.Set<AllowedOrigin>().AnyAsync(row => parsedOrigins.Contains(row.Origin)))
+        return AuthenticateResult.Fail(
+          new UnauthorizedAccessException(
+            $"Invalid Origin {string.Join(", ", parsedOrigins)}"
+          )
+        );
+    }
+
 
     IEnumerable<Claim> initialClaims = [
       new Claim(ClaimTypes.NameIdentifier, subjectId.ToString("N")),
