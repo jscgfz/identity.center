@@ -23,7 +23,16 @@ public sealed class RequestLogginHandler(RequestDelegate next)
 
       using (MemoryStream requestMemo = new())
       {
-        await context.Request.Body.CopyToAsync(requestMemo);
+        if(context.Request.ContentType?.Contains("form-data") ?? false)
+        {
+          byte[] data = IdentityCommons.Encoding.GetBytes(
+            $"{context.Request.ContentType} - {context.Request.ContentLength}"
+          );
+
+          requestMemo.Write(data);
+        }
+        else
+          await context.Request.Body.CopyToAsync(requestMemo);
         if (requestMemo.Length > 0)
         {
           requestBody = IdentityCommons.Encoding.GetString(requestMemo.ToArray());

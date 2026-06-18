@@ -3,6 +3,7 @@ using System.Text.Json;
 using Identity.Center.Domain.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Polly;
 
 namespace Identity.Center.Infrastructure.Configuration.Logger;
 
@@ -18,8 +19,19 @@ internal sealed class HttpLoginHandler(IServiceProvider provider) : DelegatingHa
 
       if (request.Content != null)
       {
-        await request.Content.LoadIntoBufferAsync(cancellationToken);
-        await request.Content.CopyToAsync(stream, cancellationToken);
+        if(request.Content is MultipartFormDataContent cnt)
+        {
+          byte[] data = IdentityCommons.Encoding.GetBytes(
+            JsonSerializer.Serialize(cnt)
+          );
+
+          stream.Write(data);
+        }
+        else
+        {
+          await request.Content.LoadIntoBufferAsync(cancellationToken);
+          await request.Content.CopyToAsync(stream, cancellationToken);
+        }
       }
 
       _logger.LogInformation(
@@ -37,14 +49,15 @@ internal sealed class HttpLoginHandler(IServiceProvider provider) : DelegatingHa
       DateTimeOffset init = DateTimeOffset.UtcNow;
       HttpResponseMessage response = await base.SendAsync(request, cancellationToken);
 
+      using MemoryStream copyResponse = new();
       await response.Content.LoadIntoBufferAsync(cancellationToken);
-      await response.Content.CopyToAsync(stream, cancellationToken);
+      await response.Content.CopyToAsync(copyResponse, cancellationToken);
       _logger.LogInformation(
         "Client executed response code {statusCode} body {@body} elapsedTime {elapsedTime}",
         response.StatusCode,
         JsonSerializer.Deserialize<JsonElement>(
           stream.Length > 0 ?
-            IdentityCommons.Encoding.GetString(stream.ToArray()) :
+            IdentityCommons.Encoding.GetString(copyResponse.ToArray()) :
             "no content"
         ),
         DateTimeOffset.UtcNow - init
