@@ -30,7 +30,10 @@ services:
     ports:
       - "56676:8080"
     depends_on:
-      - identity.center.redis
+      identity.center.redis:
+        condition: service_healthy
+      identity.center.broker:
+        condition: service_healthy
   identity.center.redis:
     expose:
       - 6379
@@ -61,3 +64,9 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
