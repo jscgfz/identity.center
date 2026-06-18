@@ -3,7 +3,9 @@ using FluentValidation;
 using Identity.Center.Application.Result.Behaviors;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Refit;
 
 namespace Identity.Center.Application.Extensions;
 
@@ -26,4 +28,7 @@ public static class DependencyInjection
       });
     return builder;
   }
+
+  public static StreamPart AsStreamPart(this IFormFile file)
+    => new(file.OpenReadStream(), file.FileName, file.ContentType);
 }
