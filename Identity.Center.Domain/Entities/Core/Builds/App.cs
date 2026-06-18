@@ -18,4 +18,5 @@ public class App : MasterEntity<Guid>
   public virtual ICollection<SingleCredential> Credentials { get; set; } = [];
   public virtual ICollection<Role> Roles { get; set; } = [];
   public virtual ICollection<HealtCheck> HealtChecks { get; set; } = [];
+  public virtual ICollection<AppRoute> Routes { get; set; } = [];
 }

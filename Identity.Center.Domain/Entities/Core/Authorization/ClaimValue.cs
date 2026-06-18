@@ -13,4 +13,5 @@ public class ClaimValue : Entity<Guid>
   public virtual Group Group { get; set; } = default!;
   public virtual ICollection<RoleClaim> Roles { get; set; } = [];
   public virtual ICollection<ApiKeyClaim> ApiKeys { get; set; } = [];
+  public virtual ICollection<RouteClaim> Routes { get; set; } = [];
 }
