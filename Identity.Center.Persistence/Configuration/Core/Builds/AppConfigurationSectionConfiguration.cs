@@ -79,7 +79,62 @@ internal sealed class AppConfigurationSectionConfiguration : IEntityTypeConfigur
           AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
           Key = $"{nameof(QdControlOptions)}:{nameof(QdControlOptions.BaseUrl)}",
           Value = "http://www.qdatacolombia.com/Services/ServiciosApi/ServiceAutenticacionLDAP"
-        }
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(ContactTypesOptions)}:{nameof(ContactTypesOptions.CellPhoneExpressions)}:0",
+          Value = @"^\+573\d{9}$"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(ContactTypesOptions)}:{nameof(ContactTypesOptions.EmailExpressions)}:1",
+          Value = @"^([a-z]+\.[a-z]+@finanzauto\.com\.co)$"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(ContactTypesOptions)}:{nameof(ContactTypesOptions.EmailExpressions)}:2",
+          Value = @"^([a-z]+\.[a-z]+@promotec\.com)$"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(ContactTypesOptions)}:{nameof(ContactTypesOptions.EmailExpressions)}:3",
+          Value = @"^([a-z]+\.[a-z]+@asisya\.com)$"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(ContactTypesOptions)}:{nameof(ContactTypesOptions.EmailExpressions)}:4",
+          Value = @"^([a-z]+\.[a-z]+@carfiao\.com)$"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(AlfrescoOptions)}:{nameof(AlfrescoOptions.BaseUrl)}",
+          Value = "http://192.168.50.76:11001/alfresco/api/-default-/public/alfresco/versions/1"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(AlfrescoOptions)}:{nameof(AlfrescoOptions.Username)}",
+          Value = "laura.roa"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(AlfrescoOptions)}:{nameof(AlfrescoOptions.Password)}",
+          Value = "L0nd0n$.$"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(AlfrescoOptions)}:{nameof(AlfrescoOptions.NodeCollection)}:{nameof(Authorization)}",
+          Value = "76a0b619-3b8a-44f5-a947-b3a6a4db8378"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(AlfrescoOptions)}:{nameof(AlfrescoOptions.ValidMimeTypes)}:0",
+          Value = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        },
+        new AppConfigurationSection() {
+          AppId = Guid.Parse("5f9c0e66-e29f-f011-81de-00505682eca9"),
+          Key = $"{nameof(AlfrescoOptions)}:{nameof(AlfrescoOptions.ValidMimeTypes)}:1",
+          Value = "application/pdf"
+        },
       ]);
   }
 }
