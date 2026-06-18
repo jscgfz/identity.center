@@ -16,6 +16,7 @@ internal static class DbContextExtensions
       .ApplyConfiguration(new DomainCredentialConfiguration())
       .ApplyConfiguration(new SingleCredentialConfiguration())
       .ApplyConfiguration(new ApiKeyClaimConfiguration())
+      .ApplyConfiguration(new RouteClaimConfiguration())
       .ApplyConfiguration(new ClaimValueConfiguration())
       .ApplyConfiguration(new RoleClaimConfiguration())
       .ApplyConfiguration(new UserRoleConfiguration());
@@ -23,6 +24,7 @@ internal static class DbContextExtensions
   private static ModelBuilder WithBuildSchema(this ModelBuilder modelBuilder)
     => modelBuilder
       .ApplyConfiguration(new AppAllowedCredentialConfiguration())
+      .ApplyConfiguration(new AppRouteConfiguration())
       .ApplyConfiguration(new AppConfiguration())
       .ApplyConfiguration(new AppConfigurationSectionConfiguration())
       .ApplyConfiguration(new CredentialTypeConfiguration())
@@ -39,6 +41,7 @@ internal static class DbContextExtensions
       .ApplyConfiguration(new ActionConfiguration())
       .ApplyConfiguration(new AllowedOriginsConfiguration())
       .ApplyConfiguration(new AppAuthConfiguration())
+      .ApplyConfiguration(new ChangeControlConfiguration())
       .ApplyConfiguration(new ContactTypeConfiguration())
       .ApplyConfiguration(new GroupConfiguration());
 

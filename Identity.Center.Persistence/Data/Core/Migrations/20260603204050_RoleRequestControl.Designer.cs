@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Center.Persistence.Data.Core.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20260513144624_NotificationOptions")]
-    partial class NotificationOptions
+    [Migration("20260603204050_RoleRequestControl")]
+    partial class RoleRequestControl
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -776,6 +776,57 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.ToTable("roles_claims", "auth");
                 });
 
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authorization.RouteClaim", b =>
+                {
+                    b.Property<Guid>("RouteId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("route_id");
+
+                    b.Property<Guid>("ClaimId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("claim_id");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<Guid>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"))
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("deleted_at_utc");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("last_modified_at_utc");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("last_modified_by");
+
+                    b.HasKey("RouteId", "ClaimId");
+
+                    b.HasIndex("ClaimId");
+
+                    b.ToTable("routes_claims", "auth");
+                });
+
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authorization.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -1175,7 +1226,208 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                             CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
                             IsDeleted = false,
                             Value = "vijsrsgsowdgizkc"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "QdControlOptions:BaseUrl",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "http://www.qdatacolombia.com/Services/ServiciosApi/ServiceAutenticacionLDAP"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "ContactTypesOptions:CellPhoneExpressions:0",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "^\\+573\\d{9}$"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "ContactTypesOptions:EmailExpressions:1",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "^([a-z]+\\.[a-z]+@finanzauto\\.com\\.co)$"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "ContactTypesOptions:EmailExpressions:2",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "^([a-z]+\\.[a-z]+@promotec\\.com)$"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "ContactTypesOptions:EmailExpressions:3",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "^([a-z]+\\.[a-z]+@asisya\\.com)$"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "ContactTypesOptions:EmailExpressions:4",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "^([a-z]+\\.[a-z]+@carfiao\\.com)$"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "AlfrescoOptions:BaseUrl",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "http://192.168.50.76:11001/alfresco/api/-default-/public/alfresco/versions/1"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "AlfrescoOptions:Username",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "laura.roa"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "AlfrescoOptions:Password",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "L0nd0n$.$"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "AlfrescoOptions:NodeCollection:Authorization",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "76a0b619-3b8a-44f5-a947-b3a6a4db8378"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "AlfrescoOptions:ValidMimeTypes:0",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        },
+                        new
+                        {
+                            AppId = new Guid("5f9c0e66-e29f-f011-81de-00505682eca9"),
+                            Key = "AlfrescoOptions:ValidMimeTypes:1",
+                            CreatedAtUtc = new DateTimeOffset(new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new TimeSpan(0, 0, 0, 0, 0)),
+                            CreatedBy = new Guid("00000000-0000-0000-0000-000000000000"),
+                            IsDeleted = false,
+                            Value = "application/pdf"
                         });
+                });
+
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.AppRoute", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("newsequentialid()");
+
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("app_id");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<Guid>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"))
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("deleted_at_utc");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<bool>("ExcludeNav")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("exclude_navigation");
+
+                    b.Property<string>("Icon")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("icon");
+
+                    b.Property<int>("Index")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0)
+                        .HasColumnName("index");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<string>("Key")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("key");
+
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("last_modified_at_utc");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid?>("ParentRouteId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("parent_route_id");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValue("/")
+                        .HasColumnName("path");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentRouteId");
+
+                    b.HasIndex("AppId", "Key", "Path")
+                        .IsUnique();
+
+                    b.ToTable("routes", "build");
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.CredentialType", b =>
@@ -1747,6 +1999,66 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AllowedOrigin", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("newsequentialid()");
+
+                    b.Property<Guid>("ApiKeyId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("api_key_id");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<Guid>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"))
+                        .HasColumnName("created_by");
+
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("deleted_at_utc");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("last_modified_at_utc");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<string>("Origin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
+                        .HasColumnName("origin");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiKeyId", "Origin")
+                        .IsUnique();
+
+                    b.ToTable("allowed_origins", "sec");
+                });
+
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AppAuth", b =>
                 {
                     b.Property<Guid>("AppId")
@@ -1895,6 +2207,87 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                             SignatureKey = new byte[] { 101, 206, 146, 19, 58, 149, 193, 222, 177, 24, 199, 139, 66, 42, 16, 125, 221, 209, 254, 155, 118, 208, 165, 154, 67, 252, 3, 229, 228, 15, 185, 62 },
                             TwoFactorEnabled = false
                         });
+                });
+
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.ChangeControl", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id")
+                        .HasColumnOrder(0)
+                        .HasDefaultValueSql("newsequentialid()");
+
+                    b.Property<byte[]>("AuthorizationDocument")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("authorization_document");
+
+                    b.Property<DateTimeOffset>("CreatedAtUtc")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("created_at_utc")
+                        .HasDefaultValueSql("getutcdate()");
+
+                    b.Property<Guid>("CreatedBy")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasDefaultValue(new Guid("00000000-0000-0000-0000-000000000000"))
+                        .HasColumnName("created_by");
+
+                    b.Property<byte[]>("CurrentPicture")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("current_picture");
+
+                    b.Property<DateTimeOffset?>("DeletedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("deleted_at_utc");
+
+                    b.Property<Guid?>("DeletedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("deleted_by");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false)
+                        .HasColumnName("deleted");
+
+                    b.Property<DateTimeOffset?>("LastModifiedAtUtc")
+                        .HasColumnType("datetimeoffset")
+                        .HasColumnName("last_modified_at_utc");
+
+                    b.Property<Guid?>("LastModifiedBy")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("last_modified_by");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("reason");
+
+                    b.Property<byte[]>("RequestPicture")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)")
+                        .HasColumnName("request_picture");
+
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("role_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("pending")
+                        .HasColumnName("status");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("change_control", "sec");
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.ContactType", b =>
@@ -2268,6 +2661,25 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authorization.RouteClaim", b =>
+                {
+                    b.HasOne("Identity.Center.Domain.Entities.Core.Authorization.ClaimValue", "Claim")
+                        .WithMany("Routes")
+                        .HasForeignKey("ClaimId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Identity.Center.Domain.Entities.Core.Builds.AppRoute", "Route")
+                        .WithMany("Claims")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Claim");
+
+                    b.Navigation("Route");
+                });
+
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authorization.UserRole", b =>
                 {
                     b.HasOne("Identity.Center.Domain.Entities.Core.Identity.Role", "Role")
@@ -2317,6 +2729,24 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("App");
                 });
 
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.AppRoute", b =>
+                {
+                    b.HasOne("Identity.Center.Domain.Entities.Core.Builds.App", "App")
+                        .WithMany("Routes")
+                        .HasForeignKey("AppId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Identity.Center.Domain.Entities.Core.Builds.AppRoute", "ParentRoute")
+                        .WithMany("ChildRoutes")
+                        .HasForeignKey("ParentRouteId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.Navigation("App");
+
+                    b.Navigation("ParentRoute");
+                });
+
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.HealtCheck", b =>
                 {
                     b.HasOne("Identity.Center.Domain.Entities.Core.Builds.App", "App")
@@ -2358,6 +2788,17 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("App");
                 });
 
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AllowedOrigin", b =>
+                {
+                    b.HasOne("Identity.Center.Domain.Entities.Core.Authentication.ApiKey", "ApiKey")
+                        .WithMany("AllowedOrigins")
+                        .HasForeignKey("ApiKeyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("ApiKey");
+                });
+
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.AppAuth", b =>
                 {
                     b.HasOne("Identity.Center.Domain.Entities.Core.Builds.App", "App")
@@ -2369,8 +2810,21 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("App");
                 });
 
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Security.ChangeControl", b =>
+                {
+                    b.HasOne("Identity.Center.Domain.Entities.Core.Identity.Role", "Role")
+                        .WithMany("History")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Authentication.ApiKey", b =>
                 {
+                    b.Navigation("AllowedOrigins");
+
                     b.Navigation("Claims");
                 });
 
@@ -2379,6 +2833,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("ApiKeys");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("Routes");
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.App", b =>
@@ -2397,6 +2853,15 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
                     b.Navigation("HealtChecks");
 
                     b.Navigation("Roles");
+
+                    b.Navigation("Routes");
+                });
+
+            modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.AppRoute", b =>
+                {
+                    b.Navigation("ChildRoutes");
+
+                    b.Navigation("Claims");
                 });
 
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Builds.CredentialType", b =>
@@ -2409,6 +2874,8 @@ namespace Identity.Center.Persistence.Data.Core.Migrations
             modelBuilder.Entity("Identity.Center.Domain.Entities.Core.Identity.Role", b =>
                 {
                     b.Navigation("Claims");
+
+                    b.Navigation("History");
 
                     b.Navigation("Users");
                 });
