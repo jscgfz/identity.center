@@ -15,5 +15,6 @@ public sealed record GetOwnUsersQuery(
   string? FirstLastName,
   string? SecondLastName,
   string? ContactInfo,
-  string? Role
+  string? Role,
+  string? Username
 ) : IPaginationParams, IQuery<IPaginatedResult<OwnUserDto>>;
