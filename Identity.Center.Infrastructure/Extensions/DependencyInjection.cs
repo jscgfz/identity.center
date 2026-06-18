@@ -95,6 +95,7 @@ public static class DependencyInjection
       .Bind(builder.Configuration.GetRequiredSection(nameof(BrokerOptions)))
       .ValidateOnStart();
 
+
     builder
       .Services
       .AddSingleton<IConnectionFactory>(sp =>
@@ -157,6 +158,15 @@ public static class DependencyInjection
 
     builder
       .Services
+      .AddOptions<AlfrescoOptions>()
+      .Bind(
+        builder.Configuration
+          .GetRequiredSection(nameof(AlfrescoOptions))
+      )
+      .ValidateOnStart();
+
+    builder
+      .Services
       .AddOptions<MasivianOptions>()
       .Bind(
         builder.Configuration
@@ -176,6 +186,18 @@ public static class DependencyInjection
     builder
       .Services
       .AddTransient<HttpLoginHandler>();
+
+    builder
+      .Services
+      .AddRefitClient<IAlfrescoClient>()
+      .ConfigureHttpClient((provider, client) =>
+      {
+        AlfrescoOptions options = provider.GetRequiredService<IOptionsMonitor<AlfrescoOptions>>().CurrentValue;
+        client.BaseAddress = new Uri(options.BaseUrl);
+        byte[] tokenBytes = IdentityCommons.Encoding.GetBytes($"{options.Username}:{options.Password}");
+        client.DefaultRequestHeaders.Authorization = new("Basic", Convert.ToBase64String(tokenBytes));
+      })
+      .AddHttpMessageHandler<HttpLoginHandler>();
 
     builder
       .Services
