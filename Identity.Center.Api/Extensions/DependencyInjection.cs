@@ -162,9 +162,13 @@ public static class DependencyInjection
         options.EnableDeepLinking();
         options.EnableFilter();
         options.HeadContent = "<link rel='icon' type='image/ico' href='https://www.finanzauto.com.co/portal/icon.ico' sizes='32x32' />";
-        options.HeadContent += "<style>html.dark-mode .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {\r\n    color: #bdc6dd;\r\n}</style>";
+        options.HeadContent += "<style>html.dark-mode .swagger-ui .opblock-description-wrapper, .swagger-ui .opblock-external-docs-wrapper, .swagger-ui .opblock-title_normal {\r\n    color: #bdc6dd;\r\n}\r\nhtml.dark-mode .swagger-ui .opblock.opblock-put .opblock-section-header {background: #9a5b3e47;border-bottom: 1px solid #523524;border-top: 1px solid #523524;}</style>";
         options.ConfigObject.AdditionalItems["cdn_url"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist@5/";
       });
+
+    app
+      .UseAntiforgery();
+
     return app;
   }
 
@@ -183,6 +187,10 @@ public static class DependencyInjection
     builder
       .Services
       .AddHttpContextAccessor();
+
+    builder
+      .Services
+      .AddAntiforgery();
 
     builder.Services.Configure<ForwardedHeadersOptions>(options =>
     {
