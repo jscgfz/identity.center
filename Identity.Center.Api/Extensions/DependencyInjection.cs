@@ -300,6 +300,12 @@ public static class DependencyInjection
     return app;
   }
 
+  public static RouteHandlerBuilder AddAuthProduces(this RouteHandlerBuilder builder)
+    => builder
+      .ProducesProblem(StatusCodes.Status401Unauthorized)
+      .ProducesProblem(StatusCodes.Status403Forbidden)
+      .ProducesProblem(StatusCodes.Status400BadRequest);
+
   public static TBuilder BuildRequirementsDoc<TBuilder>(this TBuilder builder, string? description = null)
     where TBuilder : IEndpointConventionBuilder
   {
