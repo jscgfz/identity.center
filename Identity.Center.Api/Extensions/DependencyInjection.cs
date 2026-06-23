@@ -344,9 +344,10 @@ public static class DependencyInjection
           .AddDefaultPolicy(policy =>
           {
             policy
-              .WithOrigins([.. (builder.Configuration.GetSection(nameof(CorsAuthorizationFilter)).Get<IEnumerable<string>>() ?? [])])
+              .SetIsOriginAllowed(_ => true)
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
           });
       });
 
